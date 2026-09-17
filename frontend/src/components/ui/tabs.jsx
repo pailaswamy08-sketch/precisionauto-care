@@ -23,7 +23,7 @@ export function TabsList({ className, children, currentValue, onValueChange }) {
   return (
     <div
       className={cn(
-        "inline-flex h-11 items-center justify-center rounded-2xl bg-muted/60 p-1 text-muted-foreground border border-border/60 backdrop-blur-md",
+        "inline-flex h-10 items-center justify-center rounded-lg bg-zinc-900 p-1 text-zinc-400 border border-zinc-800",
         className
       )}
     >
@@ -42,10 +42,10 @@ export function TabsTrigger({ value, className, children, currentValue, onValueC
       type="button"
       onClick={() => onValueChange && onValueChange(value)}
       className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-all disabled:pointer-events-none disabled:opacity-50",
         isSelected
-          ? "bg-gradient-to-r from-[#7c1782] via-[#c63f7b] to-[#f4ad97] text-white shadow-md shadow-pink-500/25 font-bold"
-          : "text-muted-foreground hover:text-foreground hover:bg-card/40",
+          ? "bg-zinc-800 text-white shadow-sm font-semibold"
+          : "text-zinc-400 hover:text-white hover:bg-zinc-850",
         className
       )}
       {...props}
@@ -60,7 +60,7 @@ export function TabsContent({ value, className, children, currentValue }) {
   return (
     <div
       className={cn(
-        "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 animate-fadeIn",
+        "outline-none transition-opacity duration-200",
         className
       )}
     >

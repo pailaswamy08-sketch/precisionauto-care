@@ -57,7 +57,7 @@ export default function App() {
       try { return JSON.parse(saved); } catch (e) {}
     }
     return {
-      userId: 4,
+      userId: 1,
       email: 'alex@fleetcorp.com',
       fullName: 'Alex Mercer',
       role: 'CLIENT',
@@ -102,23 +102,6 @@ export default function App() {
     loadAllData();
   }, []);
 
-  const handleSwitchPersona = async (persona) => {
-    try {
-      const password = persona.role === 'ADMIN' ? 'Admin@123' : persona.role === 'TECHNICIAN' ? 'Tech@123' : 'Client@123';
-      const user = await api.login(persona.email, password);
-      setCurrentUser(user);
-    } catch (err) {
-      console.warn("Persona switch fallback:", err.message);
-      setCurrentUser({
-        userId: 1,
-        email: persona.email,
-        fullName: persona.name,
-        role: persona.role,
-        organization: persona.title
-      });
-    }
-  };
-
   const handleBookingCreated = (newBooking) => {
     setBookings(prev => [newBooking, ...prev]);
     api.getRecords().then(setRecords);
@@ -137,7 +120,7 @@ export default function App() {
     setInvoices(prev => prev.map(i => i.id === paidInvoice.id ? paidInvoice : i));
   };
 
-  const handleSelectInvoice = (invoiceNumber) => {
+  const handleSelectInvoice = () => {
     setActiveTab('billing');
   };
 
@@ -168,32 +151,33 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0c0712] text-zinc-100 flex flex-col">
-      {/* Top Navigation */}
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col antialiased">
+      {/* Top Floating Pill Navigation */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         currentUser={currentUser}
-        onSwitchPersona={handleSwitchPersona}
         onOpenLoginModal={() => setShowLoginModal(true)}
         onSignOut={handleSignOut}
       />
 
-      {/* Login Modal */}
+      {/* Login Modal for Account Switching */}
       {showLoginModal && (
-        <LoginPage
-          isModal={true}
-          onLoginSuccess={handleLoginSuccess}
-          onClose={() => setShowLoginModal(false)}
-        />
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <LoginPage
+            isModal={true}
+            onLoginSuccess={handleLoginSuccess}
+            onClose={() => setShowLoginModal(false)}
+          />
+        </div>
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-64 space-y-3">
-            <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-xs text-zinc-400 font-mono">Syncing with PrecisionAuto API Gateway...</p>
+            <div className="w-8 h-8 border-2 border-zinc-200 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-xs text-zinc-400 font-mono">Loading operations workspace...</p>
           </div>
         ) : (
           <>
@@ -251,12 +235,12 @@ export default function App() {
 
             {activeTab === '404' && (
               <Card className="p-8 text-center max-w-md mx-auto space-y-4">
-                <div className="w-12 h-12 rounded-lg bg-[#271638] flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-lg bg-zinc-850 flex items-center justify-center mx-auto border border-zinc-700">
                   <Icon name="warning" size={24} />
                 </div>
-                <h2 className="text-lg font-bold text-white">Page Not Found</h2>
+                <h2 className="text-lg font-bold text-white">Section Not Found</h2>
                 <p className="text-xs text-zinc-400">
-                  The requested platform section does not exist.
+                  The requested platform tab does not exist.
                 </p>
                 <Button
                   onClick={() => setActiveTab('dashboard')}
@@ -271,15 +255,15 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="no-print border-t border-[#221232] bg-[#0f0817] py-6 mt-12">
+      <footer className="no-print border-t border-zinc-800/80 bg-zinc-950 py-6 mt-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <div>
             <span className="font-semibold text-white">
               PrecisionAuto Care Platform
-            </span> &bull; PS024 Automotive Fleet Maintenance
+            </span> &bull; PS024 Fleet Maintenance & Microservices
           </div>
-          <div className="font-mono text-[11px] text-zinc-400">
-            24SDCS03R &bull; Team PS24-S54-15 &bull; Spring Boot + Eureka + shadcn/ui
+          <div className="font-mono text-[11px] text-zinc-500">
+            24SDCS03R &bull; Team PS24-S54-15 &bull; Supabase PostgreSQL
           </div>
         </div>
       </footer>

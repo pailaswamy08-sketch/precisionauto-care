@@ -86,7 +86,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
 
     const payload = {
       bayId: Number(selectedBayId),
-      customerId: currentUser?.userId || 4,
+      customerId: currentUser?.userId || 1,
       customerName,
       customerEmail,
       customerPhone,
@@ -136,7 +136,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
     <div className="space-y-8">
       
       {/* Title & Date Selector */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#271638]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Service Bay Reservation &amp; Schedule
@@ -147,7 +147,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
         </div>
 
         {/* Date Selector */}
-        <div className="flex items-center gap-3 bg-[#160c22] px-3 py-2 rounded-lg border border-[#2b163d]">
+        <div className="flex items-center gap-3 bg-zinc-900 px-3.5 py-2 rounded-md border border-zinc-800">
           <Icon name="calendar_month" size={16} />
           <input
             type="date"
@@ -157,7 +157,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
           />
           <button
             onClick={() => fetchAvailability(selectedDate)}
-            className="p-1 text-zinc-400 hover:text-white inline-flex items-center justify-center"
+            className="p-1 text-zinc-400 hover:text-white inline-flex items-center justify-center rounded"
             title="Refresh availability"
           >
             <Icon name="refresh" size={15} className={loadingAvail ? 'animate-spin' : ''} />
@@ -167,7 +167,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
 
       {/* Alert Messages */}
       {errorMessage && (
-        <div className="bg-red-950/60 border border-red-800/50 rounded-lg p-4 text-xs text-red-200 flex items-start gap-3">
+        <div className="bg-red-950/60 border border-red-800/60 rounded-md p-4 text-xs text-red-200 flex items-start gap-3">
           <Icon name="error" size={18} />
           <div>
             <div className="font-semibold">{errorMessage.title}</div>
@@ -177,7 +177,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
       )}
 
       {statusMessage && (
-        <div className="bg-emerald-950/60 border border-emerald-800/50 rounded-lg p-4 text-xs text-emerald-200 flex items-center gap-3">
+        <div className="bg-zinc-800 border border-zinc-700 rounded-md p-4 text-xs text-zinc-100 flex items-center gap-3">
           <Icon name="check_circle" size={18} />
           <span>{statusMessage.text}</span>
         </div>
@@ -185,22 +185,22 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
 
       {/* Bay Availability Grid */}
       <Card className="p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#231333]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-800">
           <h2 className="text-sm font-semibold text-white flex items-center gap-2">
             <Icon name="grid_view" size={16} /> Bay Slot Grid ({selectedDate})
           </h2>
           
           <div className="flex items-center gap-4 text-xs">
-            <span className="text-emerald-400 font-medium">Available</span>
-            <span className="text-red-400 font-medium">Occupied</span>
-            <span className="text-purple-300 font-medium">Selected</span>
+            <span className="text-emerald-400 font-medium">&bull; Available</span>
+            <span className="text-red-400 font-medium">&bull; Occupied</span>
+            <span className="text-zinc-100 font-medium">&bull; Selected</span>
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#271638] text-xs font-medium text-zinc-400">
+              <tr className="border-b border-zinc-800 text-xs font-medium text-zinc-400">
                 <th className="py-2.5 px-3">Bay Station</th>
                 <th className="py-2.5 px-2 text-center">09:00 - 11:00</th>
                 <th className="py-2.5 px-2 text-center">11:00 - 13:00</th>
@@ -208,9 +208,9 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                 <th className="py-2.5 px-2 text-center">16:00 - 18:00</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1e102e] text-xs">
+            <tbody className="divide-y divide-zinc-800/60 text-xs">
               {availability.map((bay) => (
-                <tr key={bay.bayId} className="hover:bg-[#1a0e28] transition-colors">
+                <tr key={bay.bayId} className="hover:bg-zinc-850/50 transition-colors">
                   <td className="py-3 px-3">
                     <div className="font-semibold text-white font-mono">{bay.bayNumber} &bull; {bay.bayName}</div>
                     <div className="text-[11px] text-zinc-400 font-mono">${bay.hourlyRate}/hr &bull; {bay.bayType}</div>
@@ -227,15 +227,15 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                           onClick={() => handleSelectSlot(bay.bayId, slotObj.timeSlot, isAvailable, slotObj)}
                           className={`w-full py-2 px-2 rounded-md text-xs font-medium transition-colors border ${
                             isSelected
-                              ? 'bg-[#7c1782] text-white border-[#9b24a3] font-bold'
+                              ? 'bg-zinc-100 text-zinc-950 border-zinc-100 font-bold shadow-sm'
                               : isAvailable
-                              ? 'bg-[#1a2e20] text-emerald-300 border-[#25462f] hover:bg-[#203c29]'
-                              : 'bg-[#2d1419] text-red-300 border-[#471e26] cursor-not-allowed'
+                              ? 'bg-zinc-900 text-zinc-200 border-zinc-800 hover:bg-zinc-800'
+                              : 'bg-red-950/40 text-red-300 border-red-900/40 cursor-not-allowed'
                           }`}
                         >
                           <div>{isAvailable ? 'OPEN' : 'LOCKED'}</div>
                           {!isAvailable && (
-                            <div className="text-[10px] font-mono text-red-200 truncate mt-0.5">
+                            <div className="text-[10px] font-mono text-red-300 truncate mt-0.5">
                               {slotObj.vehiclePlate || 'OCCUPIED'}
                             </div>
                           )}
@@ -250,19 +250,19 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
         </div>
       </Card>
 
-      {/* 2-Column Split: Form on Left, Presets & Confirmed on Right (NO 3 Horizontal Cards) */}
+      {/* 2-Column Split: Form on Left, Presets & Confirmed on Right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Form Card */}
         <Card className="p-6 space-y-4">
-          <div className="pb-3 border-b border-[#231333]">
+          <div className="pb-3 border-b border-zinc-800">
             <h2 className="text-sm font-semibold text-white">
               Reserve Bay #{selectedBayId} ({selectedSlot})
             </h2>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-zinc-300 font-medium">Customer Name</label>
               <Input
                 type="text"
@@ -273,7 +273,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300 font-medium">Email</label>
                 <Input
                   type="email"
@@ -282,7 +282,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                   onChange={(e) => setCustomerEmail(e.target.value)}
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300 font-medium">Phone</label>
                 <Input
                   type="text"
@@ -293,7 +293,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300 font-medium">Vehicle License Plate</label>
                 <Input
                   type="text"
@@ -303,7 +303,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                   className="font-mono uppercase"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300 font-medium">Vehicle Model</label>
                 <Input
                   type="text"
@@ -314,7 +314,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
               </div>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-zinc-300 font-medium">Vehicle VIN</label>
               <Input
                 type="text"
@@ -325,12 +325,12 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-zinc-300 font-medium">Service Package</label>
               <select
                 value={servicePackage}
                 onChange={(e) => setServicePackage(e.target.value)}
-                className="w-full bg-[#160d21] border border-[#2f1945] rounded-lg px-3 py-2 text-xs text-white focus:outline-none"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-zinc-500"
               >
                 <option value="ECM Sensor Calibration & 10k Tune-up">ECM Sensor Calibration &amp; 10k Tune-up</option>
                 <option value="Pneumatic Air Brake Overhaul">Pneumatic Air Brake Overhaul</option>
@@ -343,7 +343,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full h-10 text-xs font-semibold mt-2"
+              className="w-full h-10 text-xs font-semibold mt-2 rounded-md"
             >
               {submitting ? 'Validating Slot...' : 'Confirm Reservation'}
             </Button>
@@ -362,13 +362,13 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                   key={vp.plate}
                   type="button"
                   onClick={() => handleApplyPreset(vp)}
-                  className="w-full text-left p-3 rounded-lg bg-[#180e24] hover:bg-[#231534] border border-[#2c1740] transition-colors text-xs flex items-center justify-between"
+                  className="w-full text-left p-3 rounded-md bg-zinc-950 hover:bg-zinc-850 border border-zinc-800 transition-colors text-xs flex items-center justify-between"
                 >
                   <div>
                     <div className="font-mono font-semibold text-white">{vp.plate}</div>
                     <div className="text-[11px] text-zinc-400">{vp.model}</div>
                   </div>
-                  <span className="text-[11px] text-purple-300">Autofill</span>
+                  <span className="text-[11px] text-zinc-300 font-medium">Autofill &rarr;</span>
                 </button>
               ))}
             </div>
@@ -376,14 +376,14 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
 
           {/* Active Bookings List */}
           <Card className="p-6 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#231333]">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
               <h3 className="text-sm font-semibold text-white">Confirmed Bookings</h3>
               <span className="text-xs text-zinc-400 font-mono">{bookings.length} Total</span>
             </div>
 
             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
               {bookings.map((b) => (
-                <div key={b.id} className="p-3 bg-[#180e24] border border-[#2c1740] rounded-lg text-xs space-y-1">
+                <div key={b.id} className="p-3 bg-zinc-950 border border-zinc-800 rounded-md text-xs space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-white">{b.vehiclePlate}</span>
                     <span className="text-zinc-400 font-mono text-[11px]">{b.bookingReference}</span>
@@ -399,7 +399,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                       <button
                         type="button"
                         onClick={() => handleCancel(b.id, b.bookingReference)}
-                        className="text-[11px] text-red-400 hover:text-red-300"
+                        className="text-[11px] text-red-400 hover:text-red-300 transition-colors"
                       >
                         Cancel
                       </button>

@@ -95,7 +95,7 @@ PrecisionAuto Care (PS024) is a digital platform built on Spring Boot 3, Spring 
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#271638]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <div className="text-xs text-zinc-400 font-mono mb-1">
             Course 24SDCS03R &bull; Team PS24-S54-15
@@ -145,13 +145,13 @@ PrecisionAuto Care (PS024) is a digital platform built on Spring Boot 3, Spring 
         </Button>
       </div>
 
-      {/* Section 1: Rubrics Scorecard (Clean 2-Column Layout, NO 3/5 Cramped Cards) */}
+      {/* Section 1: Rubrics Scorecard */}
       {activeSection === 'rubrics' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {rubricsData.map((r) => (
             <Card key={r.id} className="p-6 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-purple-300 font-medium">Rubric #{r.id}</span>
+                <span className="text-xs font-mono text-zinc-400 font-medium">Rubric #{r.id}</span>
                 <Badge variant="success" className="font-mono text-xs">
                   {r.score}
                 </Badge>
@@ -160,7 +160,7 @@ PrecisionAuto Care (PS024) is a digital platform built on Spring Boot 3, Spring 
               <h2 className="text-sm font-bold text-white">{r.title}</h2>
               <div className="text-xs text-zinc-300 font-medium">{r.grade}</div>
 
-              <p className="text-xs text-zinc-400 pt-2 border-t border-[#231333]">
+              <p className="text-xs text-zinc-400 pt-2 border-t border-zinc-800">
                 {r.evidence}
               </p>
             </Card>
@@ -171,14 +171,14 @@ PrecisionAuto Care (PS024) is a digital platform built on Spring Boot 3, Spring 
       {/* Section 2: Database Justification Table */}
       {activeSection === 'justification' && (
         <Card className="p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+          <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
             <h2 className="text-sm font-semibold text-white">Database-per-Service Justification Matrix</h2>
             <span className="text-xs text-zinc-400 font-mono">4 Schemas</span>
           </div>
 
           <div className="space-y-4 text-xs">
             {tableJustifications.map((item, idx) => (
-              <div key={idx} className="p-4 bg-[#180e24] rounded-lg border border-[#2c1740] space-y-1.5">
+              <div key={idx} className="p-4 bg-zinc-950 rounded-md border border-zinc-800 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white font-mono">{item.service}</span>
                   <Badge variant="secondary" className="font-mono text-[11px]">{item.table}</Badge>

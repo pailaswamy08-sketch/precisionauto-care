@@ -7,17 +7,16 @@ export const Badge = ({
   children,
   ...props
 }) => {
-  const baseStyles = "inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium transition-colors select-none";
+  const baseStyles = "inline-flex items-center rounded-md px-2.5 py-0.5 text-[11px] font-medium transition-colors select-none";
 
   const variants = {
-    default: "bg-[#231534] text-white border border-[#3e215e]",
-    gradient: "bg-[#231534] text-white border border-[#3e215e]",
-    secondary: "bg-[#180e24] text-zinc-300 border border-[#2f1945]",
-    destructive: "bg-red-950/60 text-red-200 border border-red-800/50",
-    success: "bg-emerald-950/60 text-emerald-200 border border-emerald-800/50",
-    warning: "bg-amber-950/60 text-amber-200 border border-amber-800/50",
-    info: "bg-purple-950/60 text-purple-200 border border-purple-800/50",
-    outline: "border border-[#321c47] text-zinc-300",
+    default: "bg-zinc-800 text-zinc-100 border border-zinc-700/80",
+    secondary: "bg-zinc-900 text-zinc-300 border border-zinc-800",
+    outline: "border border-zinc-700 text-zinc-300 bg-transparent",
+    destructive: "bg-red-950/60 text-red-200 border border-red-800/60",
+    success: "bg-emerald-950/60 text-emerald-200 border border-emerald-800/60",
+    warning: "bg-amber-950/60 text-amber-200 border border-amber-800/60",
+    info: "bg-zinc-800 text-white border border-zinc-600",
   };
 
   return (

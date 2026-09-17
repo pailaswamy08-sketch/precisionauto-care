@@ -31,7 +31,7 @@ export default function HistoryTab({ records, onSelectInvoice }) {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#271638]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Vehicle Fleet History &amp; Diagnostic Logs
@@ -43,7 +43,7 @@ export default function HistoryTab({ records, onSelectInvoice }) {
 
         {/* Search Bar */}
         <div className="relative w-full md:w-80 shrink-0">
-          <Icon name="search" size={16} className="absolute left-3 top-3 text-zinc-400" />
+          <Icon name="search" size={16} className="absolute left-3 top-2.5 text-zinc-400" />
           <Input
             type="text"
             value={searchTerm}
@@ -77,9 +77,9 @@ export default function HistoryTab({ records, onSelectInvoice }) {
         ))}
       </div>
 
-      {/* History Records Table (Clean, spacious, no nested cards) */}
+      {/* History Records Table */}
       <Card className="p-6 space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
           <h2 className="text-sm font-semibold text-white">Maintenance History Ledger</h2>
           <span className="text-xs text-zinc-400 font-mono">{filteredRecords.length} Results</span>
         </div>
@@ -92,7 +92,7 @@ export default function HistoryTab({ records, onSelectInvoice }) {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#271638] text-zinc-400 font-medium">
+                <tr className="border-b border-zinc-800 text-zinc-400 font-medium">
                   <th className="py-2.5 px-3">Record #</th>
                   <th className="py-2.5 px-3">Vehicle</th>
                   <th className="py-2.5 px-3">VIN</th>
@@ -102,9 +102,9 @@ export default function HistoryTab({ records, onSelectInvoice }) {
                   <th className="py-2.5 px-3 text-right">Invoice</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1e102e] text-zinc-200">
+              <tbody className="divide-y divide-zinc-800/60 text-zinc-200">
                 {filteredRecords.map((rec) => (
-                  <tr key={rec.id} className="hover:bg-[#1a0e28] transition-colors">
+                  <tr key={rec.id} className="hover:bg-zinc-850/50 transition-colors">
                     <td className="py-3 px-3 font-mono font-medium text-white">{rec.recordNumber}</td>
                     <td className="py-3 px-3 font-mono">
                       <div className="text-white font-bold">{rec.vehiclePlate}</div>

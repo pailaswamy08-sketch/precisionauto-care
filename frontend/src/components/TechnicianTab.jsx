@@ -111,7 +111,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#271638]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Technician Workbench &amp; Service Orders
@@ -128,20 +128,20 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
       {/* Toast Feedback */}
       {toast && (
-        <div className={`p-4 rounded-lg text-xs flex items-center gap-2 ${
-          toast.isError ? 'bg-red-950/60 text-red-200 border border-red-800/50' : 'bg-emerald-950/60 text-emerald-200 border border-emerald-800/50'
+        <div className={`p-4 rounded-md text-xs flex items-center gap-2.5 ${
+          toast.isError ? 'bg-red-950/60 text-red-200 border border-red-800/60' : 'bg-zinc-800 text-zinc-100 border border-zinc-700'
         }`}>
           <Icon name={toast.isError ? "error" : "check_circle"} size={16} />
           <span>{toast.msg}</span>
         </div>
       )}
 
-      {/* Spacious 2-Column Layout for Jobs List & Details (NO 3/5 CRAMPED CARDS) */}
+      {/* Spacious 2-Column Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Left Column: Active Repair Queue */}
         <Card className="p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+          <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
             <h2 className="text-sm font-semibold text-white">Active Service Orders</h2>
             <span className="text-xs text-zinc-400 font-mono">{records.length} Total</span>
           </div>
@@ -153,10 +153,10 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                 <div
                   key={r.id}
                   onClick={() => setSelectedRecord(r)}
-                  className={`p-4 rounded-lg border transition-colors cursor-pointer text-xs space-y-2 ${
+                  className={`p-4 rounded-md border transition-colors cursor-pointer text-xs space-y-2 ${
                     isSelected
-                      ? 'bg-[#231534] border-[#7c1782]'
-                      : 'bg-[#180e24] border-[#2c1740] hover:bg-[#1e112d]'
+                      ? 'bg-zinc-800 border-zinc-500'
+                      : 'bg-zinc-950 border-zinc-800 hover:bg-zinc-900'
                   }`}
                 >
                   <div className="flex items-center justify-between font-mono">
@@ -186,7 +186,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
         {/* Right Column: Selected Order Actions & Management */}
         <Card className="p-6 space-y-5">
-          <div className="pb-3 border-b border-[#231333]">
+          <div className="pb-3 border-b border-zinc-800">
             <h2 className="text-sm font-semibold text-white">
               {selectedRecord ? `Order Details: ${selectedRecord.vehiclePlate}` : 'Select a Service Order'}
             </h2>
@@ -194,7 +194,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
           {selectedRecord ? (
             <div className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-4 pb-3 border-b border-[#231333]">
+              <div className="grid grid-cols-2 gap-4 pb-3 border-b border-zinc-800">
                 <div>
                   <span className="text-zinc-400 block">Record Number</span>
                   <span className="text-white font-mono font-medium">{selectedRecord.recordNumber}</span>
@@ -216,7 +216,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
               {/* Diagnostic Notes */}
               <div>
                 <span className="text-zinc-400 block mb-1">Technician Notes:</span>
-                <p className="text-zinc-200 bg-[#180e24] p-3 rounded-lg border border-[#2c1740] font-mono text-xs">
+                <p className="text-zinc-200 bg-zinc-950 p-3 rounded-md border border-zinc-800 font-mono text-xs">
                   {selectedRecord.technicianNotes || 'Initial check-in logged. Ready for diagnostics.'}
                 </p>
               </div>
@@ -238,22 +238,22 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                 {selectedRecord.parts && selectedRecord.parts.length > 0 ? (
                   <div className="space-y-1.5 max-h-32 overflow-y-auto">
                     {selectedRecord.parts.map((p, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-2 bg-[#180e24] rounded-lg border border-[#2c1740] text-xs">
-                        <span className="font-mono text-purple-300">{p.partNumber}</span>
-                        <span className="text-white">{p.partName} (x{p.quantity})</span>
-                        <span className="font-mono text-zinc-300">${(p.totalPrice || p.quantity * p.unitPrice)?.toFixed(2)}</span>
+                      <div key={idx} className="flex items-center justify-between p-2.5 bg-zinc-950 rounded-md border border-zinc-800 text-xs">
+                        <span className="font-mono text-zinc-100 font-medium">{p.partNumber}</span>
+                        <span className="text-zinc-300">{p.partName} (x{p.quantity})</span>
+                        <span className="font-mono text-zinc-200">${(p.totalPrice || p.quantity * p.unitPrice)?.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-zinc-500 italic p-2 bg-[#180e24] rounded-lg border border-[#2c1740]">
+                  <div className="text-zinc-500 italic p-3 bg-zinc-950 rounded-md border border-zinc-800">
                     No replacement parts added to this order.
                   </div>
                 )}
               </div>
 
               {/* Lifecycle Stage Transitions */}
-              <div className="pt-3 border-t border-[#231333] space-y-2">
+              <div className="pt-3 border-t border-zinc-800 space-y-2">
                 <span className="text-zinc-400 block">Stage Transition:</span>
                 <div className="flex flex-wrap gap-2">
                   <Button
@@ -308,15 +308,15 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
       {/* Modal 1: Add Part */}
       {activeModal === 'parts' && selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
-          <Card className="max-w-md w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <Card className="max-w-md w-full p-6 space-y-4 shadow-2xl bg-zinc-900 border-zinc-800">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
               <h3 className="text-sm font-semibold text-white">Add Part to {selectedRecord.vehiclePlate}</h3>
               <button onClick={() => setActiveModal(null)} className="text-zinc-400 hover:text-white">✕</button>
             </div>
 
             <form onSubmit={handleAddPart} className="space-y-3 text-xs">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300">Part Number</label>
                 <Input
                   type="text"
@@ -328,7 +328,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                 />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300">Part Name</label>
                 <Input
                   type="text"
@@ -340,7 +340,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-zinc-300">Quantity</label>
                   <Input
                     type="number"
@@ -349,7 +349,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                     onChange={(e) => setPartQuantity(e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-zinc-300">Unit Price ($)</label>
                   <Input
                     type="number"
@@ -375,16 +375,16 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
       {/* Modal 2: Sign Off & Complete */}
       {activeModal === 'complete' && selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
-          <Card className="max-w-md w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <Card className="max-w-md w-full p-6 space-y-4 shadow-2xl bg-zinc-900 border-zinc-800">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
               <h3 className="text-sm font-semibold text-white">Complete &amp; Invoice: {selectedRecord.vehiclePlate}</h3>
               <button onClick={() => setActiveModal(null)} className="text-zinc-400 hover:text-white">✕</button>
             </div>
 
             <form onSubmit={handleCompleteRepair} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-zinc-300">Labor Hours</label>
                   <Input
                     type="number"
@@ -394,7 +394,7 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                     onChange={(e) => setLaborHours(e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-zinc-300">Labor Rate ($/hr)</label>
                   <Input
                     type="number"
@@ -405,14 +405,14 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300">Technician Repair Notes</label>
                 <textarea
                   rows={3}
                   value={finalNotes}
                   onChange={(e) => setFinalNotes(e.target.value)}
                   placeholder="Completed full inspection and parts installation."
-                  className="w-full bg-[#160d21] border border-[#2f1945] rounded-lg px-3 py-2 text-xs text-white"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100 focus:outline-none focus:border-zinc-500"
                 />
               </div>
 
@@ -431,14 +431,14 @@ export default function TechnicianTab({ records, technicians, onRecordUpdated, o
 
       {/* Modal 3: Assign Tech */}
       {activeModal === 'assign' && selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
-          <Card className="max-w-sm w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <Card className="max-w-sm w-full p-6 space-y-4 shadow-2xl bg-zinc-900 border-zinc-800">
             <h3 className="text-sm font-semibold text-white">Assign Technician</h3>
             
             <select
               value={selectedTechId}
               onChange={(e) => setSelectedTechId(e.target.value)}
-              className="w-full bg-[#160d21] border border-[#2f1945] rounded-lg px-3 py-2.5 text-xs text-white"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100 focus:outline-none"
             >
               {technicians.map(t => (
                 <option key={t.id} value={t.id}>{t.fullName} ({t.role})</option>

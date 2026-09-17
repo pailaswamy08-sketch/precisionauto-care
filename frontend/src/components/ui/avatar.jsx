@@ -5,7 +5,7 @@ export function Avatar({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-2xl border border-border/80 bg-muted/60 text-foreground items-center justify-center font-bold text-xs shadow-inner",
+        "relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border border-zinc-700 bg-zinc-850 text-white items-center justify-center font-semibold text-xs",
         className
       )}
       {...props}
@@ -18,7 +18,7 @@ export function Avatar({ className, children, ...props }) {
 export function AvatarFallback({ className, children, ...props }) {
   return (
     <span
-      className={cn("flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-[#7c1782]/40 to-[#c63f7b]/30 text-pink-200 font-bold", className)}
+      className={cn("flex h-full w-full items-center justify-center rounded-full bg-zinc-800 text-zinc-100 font-semibold text-xs", className)}
       {...props}
     >
       {children}

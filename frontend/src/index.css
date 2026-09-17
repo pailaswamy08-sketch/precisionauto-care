@@ -1,34 +1,34 @@
 @layer base {
   :root {
-    --background: 270 50% 4%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
-    --card: 270 40% 7%;
+    --card: 240 10% 4.9%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 270 40% 7%;
+    --popover: 240 10% 4.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 280 75% 55%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
 
-    --secondary: 270 25% 14%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 270 20% 12%;
-    --muted-foreground: 270 10% 65%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 280 60% 45%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 270 20% 16%;
-    --input: 270 20% 14%;
-    --ring: 280 75% 55%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
 }
 
@@ -39,9 +39,9 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #0c0712;
+  background-color: #09090b;
   color: #f4f4f5;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -51,26 +51,26 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: #0c0712;
+  background-color: #09090b;
 }
 
-/* Minimal subtle scrollbar */
+/* Clean minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0712;
+  background: #09090b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #271638;
-  border-radius: 9999px;
+  background: #27272a;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #472666;
+  background: #3f3f46;
 }
 
-/* Material Symbols Helper */
+/* Material Symbols Helper - Always Pure White */
 .material-symbols-rounded {
   color: #ffffff !important;
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;

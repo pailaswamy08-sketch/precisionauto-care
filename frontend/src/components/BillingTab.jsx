@@ -50,7 +50,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#271638]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Dynamic Billing &amp; Invoices
@@ -62,7 +62,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
 
         {/* Search Bar */}
         <div className="relative w-full md:w-80 shrink-0">
-          <Icon name="search" size={16} className="absolute left-3 top-3 text-zinc-400" />
+          <Icon name="search" size={16} className="absolute left-3 top-2.5 text-zinc-400" />
           <Input
             type="text"
             value={searchTerm}
@@ -73,7 +73,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
         </div>
       </div>
 
-      {/* 2-Column Summary Cards (NO 3/4 Horizontal Cards) */}
+      {/* 2-Column Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="p-6 space-y-2">
           <div className="flex items-center justify-between text-xs text-zinc-400 font-medium">
@@ -89,7 +89,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
             <span>Collected Revenue</span>
             <Icon name="check_circle" size={16} />
           </div>
-          <div className="text-2xl font-bold text-emerald-300">${totalPaid.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-emerald-400">${totalPaid.toFixed(2)}</div>
           <div className="text-xs text-zinc-400 font-mono">
             {invoices.filter(i => i.paymentStatus === 'PAID').length} Paid Invoices
           </div>
@@ -113,7 +113,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
 
       {/* Invoices Table */}
       <Card className="p-6 space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#231333]">
+        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
           <h2 className="text-sm font-semibold text-white">Invoices Ledger</h2>
           <span className="text-xs text-zinc-400 font-mono">{filtered.length} Invoices</span>
         </div>
@@ -121,7 +121,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[#271638] text-zinc-400 font-medium">
+              <tr className="border-b border-zinc-800 text-zinc-400 font-medium">
                 <th className="py-2.5 px-3">Invoice #</th>
                 <th className="py-2.5 px-3">Client</th>
                 <th className="py-2.5 px-3">Vehicle</th>
@@ -133,9 +133,9 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                 <th className="py-2.5 px-3 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1e102e] text-zinc-200">
+            <tbody className="divide-y divide-zinc-800/60 text-zinc-200">
               {filtered.map((inv) => (
-                <tr key={inv.id} className="hover:bg-[#1a0e28] transition-colors">
+                <tr key={inv.id} className="hover:bg-zinc-850/50 transition-colors">
                   <td className="py-3 px-3 font-mono font-medium text-white">
                     {inv.invoiceNumber}
                   </td>
@@ -189,10 +189,10 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
 
       {/* Settle Payment Modal */}
       {paymentModalInvoice && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <Card className="max-w-md w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <Card className="max-w-md w-full p-6 space-y-4 shadow-2xl bg-zinc-900 border-zinc-800">
             <h3 className="text-sm font-semibold text-white">Settle Invoice Payment</h3>
-            <div className="p-4 bg-[#180e24] rounded-lg border border-[#2c1740] text-xs space-y-2 font-mono">
+            <div className="p-4 bg-zinc-950 rounded-md border border-zinc-800 text-xs space-y-2 font-mono">
               <div className="flex justify-between">
                 <span className="text-zinc-400">Invoice:</span>
                 <span className="text-white font-bold">{paymentModalInvoice.invoiceNumber}</span>
@@ -201,19 +201,19 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                 <span className="text-zinc-400">Client:</span>
                 <span className="text-white font-sans">{paymentModalInvoice.customerName}</span>
               </div>
-              <div className="flex justify-between font-bold pt-2 border-t border-[#2c1740]">
+              <div className="flex justify-between font-bold pt-2 border-t border-zinc-800">
                 <span className="text-zinc-300">Total:</span>
-                <span className="text-emerald-300">${paymentModalInvoice.totalAmount?.toFixed(2)}</span>
+                <span className="text-emerald-400">${paymentModalInvoice.totalAmount?.toFixed(2)}</span>
               </div>
             </div>
 
             <form onSubmit={handleProcessPayment} className="space-y-4 text-xs">
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-zinc-300">Payment Settlement Method</label>
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-full bg-[#160d21] border border-[#2f1945] rounded-lg px-3 py-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100 focus:outline-none"
                 >
                   <option value="FLEET_CREDIT">Corporate Fleet Credit Line (Net 30)</option>
                   <option value="CORPORATE_CARD">Corporate Fleet Card (Visa/Mastercard)</option>

@@ -1,0 +1,28 @@
+# Maven build outputs
+target/
+*.class
+*.jar
+*.war
+
+# Node dependencies & builds
+node_modules/
+dist/
+build/
+.pnpm-store/
+
+# IDE & OS files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment variables
+.env
+.env.local
+*.local
+
+# CLI binaries
+gh.exe
+bin/

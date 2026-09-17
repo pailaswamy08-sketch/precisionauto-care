@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: precisionauto-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: precision_auth
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - precisionauto-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  discovery-service:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    image: precisionauto/discovery-service:1.0.0
+    container_name: precisionauto-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - precisionauto-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    image: precisionauto/api-gateway:1.0.0
+    container_name: precisionauto-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    networks:
+      - precisionauto-net
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    image: precisionauto/auth-service:1.0.0
+    container_name: precisionauto-auth
+    ports:
+      - "8081:8081"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/precision_auth?createDatabaseIfNotExist=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - precisionauto-net
+
+  booking-service:
+    build:
+      context: ./booking-service
+      dockerfile: Dockerfile
+    image: precisionauto/booking-service:1.0.0
+    container_name: precisionauto-booking
+    ports:
+      - "8082:8082"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/precision_booking?createDatabaseIfNotExist=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - precisionauto-net
+
+  record-service:
+    build:
+      context: ./record-service
+      dockerfile: Dockerfile
+    image: precisionauto/record-service:1.0.0
+    container_name: precisionauto-record
+    ports:
+      - "8083:8083"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/precision_record?createDatabaseIfNotExist=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - precisionauto-net
+
+  billing-service:
+    build:
+      context: ./billing-service
+      dockerfile: Dockerfile
+    image: precisionauto/billing-service:1.0.0
+    container_name: precisionauto-billing
+    ports:
+      - "8084:8084"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/precision_billing?createDatabaseIfNotExist=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - precisionauto-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: precisionauto/frontend:1.0.0
+    container_name: precisionauto-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - precisionauto-net
+
+volumes:
+  mysql-data:
+
+networks:
+  precisionauto-net:
+    driver: bridge

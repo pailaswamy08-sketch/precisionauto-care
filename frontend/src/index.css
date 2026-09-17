@@ -1,0 +1,77 @@
+@layer base {
+  :root {
+    --background: 270 50% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 270 40% 7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 270 40% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 280 75% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 270 25% 14%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 270 20% 12%;
+    --muted-foreground: 270 10% 65%;
+
+    --accent: 280 60% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 20% 16%;
+    --input: 270 20% 14%;
+    --ring: 280 75% 55%;
+
+    --radius: 0.75rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0c0712;
+  color: #f4f4f5;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #0c0712;
+}
+
+/* Minimal subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0c0712;
+}
+::-webkit-scrollbar-thumb {
+  background: #271638;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #472666;
+}
+
+/* Material Symbols Helper */
+.material-symbols-rounded {
+  color: #ffffff !important;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}

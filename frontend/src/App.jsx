@@ -17,14 +17,7 @@ export default function App() {
     if (saved) {
       try { return JSON.parse(saved); } catch (e) {}
     }
-    return {
-      userId: 1,
-      email: 'swamy@gmail.com',
-      fullName: 'Swamy Paila',
-      role: 'CLIENT',
-      organization: 'Individual Customer',
-      phone: '9876543210'
-    };
+    return null;
   });
 
   const [activeRole, setActiveRole] = useState(() => {
@@ -34,7 +27,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('portal'); // 'portal' | 'architecture' | 'review1' | 'login'
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('precision_jwt_token');
+    return !!localStorage.getItem('precision_jwt_token') && !!localStorage.getItem('precision_user');
   });
 
   // Master State Across Domains
@@ -195,7 +188,7 @@ export default function App() {
     setActiveTab('login');
   };
 
-  if (!isAuthenticated || activeTab === 'login') {
+  if (!isAuthenticated || !currentUser || activeTab === 'login') {
     return (
       <LoginPage
         isModal={false}

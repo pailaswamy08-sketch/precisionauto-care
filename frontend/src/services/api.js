@@ -375,7 +375,7 @@ export const api = {
         .select('*, users(full_name, email)')
         .order('id', { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         return data.map(v => ({
           id: v.id,
           userId: v.user_id,
@@ -395,12 +395,7 @@ export const api = {
       console.warn("Get vehicles error:", e);
     }
 
-    return [
-      { id: 101, userId: 1, ownerName: "Swamy Paila", ownerEmail: "swamy@gmail.com", plateNumber: "AP39AB1234", make: "Toyota", model: "Corolla", year: 2022, vin: "1FTFW1E84KFA12091", vehicleType: "Car", notes: "Family Sedan & Daily Commute" },
-      { id: 102, userId: 1, ownerName: "Swamy Paila", ownerEmail: "swamy@gmail.com", plateNumber: "AP39CD5678", make: "Honda", model: "Activa 6G", year: 2023, vin: "ME4JF504AKL109283", vehicleType: "Bike", notes: "City Scooter" },
-      { id: 103, userId: 1, ownerName: "Swamy Paila", ownerEmail: "swamy@gmail.com", plateNumber: "TS09EF9012", make: "Tata", model: "Nexon EV", year: 2024, vin: "MAT612089NPL99201", vehicleType: "Car", notes: "Electric Compact SUV" },
-      { id: 104, userId: 4, ownerName: "Ravi Teja", ownerEmail: "ravi.customer@gmail.com", plateNumber: "AP31GH3456", make: "Hyundai", model: "Creta", year: 2021, vin: "MALC51CP5MM102938", vehicleType: "Car", notes: "Highway Vehicle" }
-    ];
+    return [];
   },
 
   async getUserVehicles(userId) {
@@ -816,7 +811,7 @@ export const api = {
         .select('*')
         .order('id', { ascending: false });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         return data.map(b => ({
           id: b.id,
           bookingReference: b.booking_reference,
@@ -840,11 +835,7 @@ export const api = {
       console.warn("Supabase getBookings error:", e);
     }
 
-    return [
-      { id: 1, bookingReference: "BK1001", bayId: 2, customerId: 1, customerName: "Swamy Paila", customerEmail: "swamy@gmail.com", customerPhone: "9876543210", vehicleVin: "1FTFW1E84KFA12091", vehiclePlate: "AP39AB1234", vehicleModel: "Toyota Corolla", servicePackage: "Oil Change", bookingDate: "2026-09-20", timeSlot: "10:00 AM", status: "CONFIRMED", notes: "Regular 10,000 km oil service" },
-      { id: 2, bookingReference: "BK1002", bayId: 1, customerId: 4, customerName: "Ravi Teja", customerEmail: "ravi.customer@gmail.com", customerPhone: "9848012345", vehicleVin: "MALC51CP5MM102938", vehiclePlate: "AP31GH3456", vehicleModel: "Hyundai Creta", servicePackage: "Brake Service", bookingDate: "2026-09-20", timeSlot: "11:30 AM", status: "IN_PROGRESS", notes: "Squeaking sound from front brakes" },
-      { id: 3, bookingReference: "BK1003", bayId: 3, customerId: 5, customerName: "Kumar Sanu", customerEmail: "kumar@gmail.com", customerPhone: "9871122334", vehicleVin: "MAT612089NPL99201", vehiclePlate: "TS09EF9012", vehicleModel: "Tata Nexon EV", servicePackage: "General Inspection", bookingDate: "2026-09-19", timeSlot: "02:00 PM", status: "COMPLETED", notes: "Routine battery check" }
-    ];
+    return [];
   },
 
   async getUserBookings(userId, email) {
@@ -954,67 +945,7 @@ export const api = {
       console.warn("Supabase getRecords error:", e);
     }
 
-    return [
-      {
-        id: 1,
-        recordNumber: "REC1001",
-        bookingId: 1,
-        customerId: 1,
-        customerName: "Swamy Paila",
-        vehicleVin: "1FTFW1E84KFA12091",
-        vehiclePlate: "AP39AB1234",
-        vehicleModel: "Toyota Corolla",
-        bayNumber: "Bay 2",
-        servicePackage: "Oil Change",
-        assignedTechnicianId: 2,
-        assignedTechnicianName: "Ravi Kumar",
-        serviceStatus: "COMPLETED",
-        problemDescription: "Old engine oil & clogged oil filter",
-        workPerformed: "Full synthetic 5W-30 engine oil replaced and new OEM oil filter installed",
-        dtcCodes: "P0000 (No Error)",
-        technicianNotes: "Engine running smoothly after flush. Test drive passed.",
-        currentOdometer: 24500,
-        laborHours: 1.0,
-        laborRate: 300.0,
-        partsCost: 1200.0,
-        labourCost: 300.0,
-        totalCost: 1500.0,
-        invoiceNumber: "INV1001",
-        parts: [
-          { id: 1, partNumber: "ENG-OIL-5W30", partName: "Toyota Genuine 5W-30 Synthetic (4L)", quantity: 1, unitPrice: 950.0, totalPrice: 950.0 },
-          { id: 2, partNumber: "FLT-OIL-TY01", partName: "OEM Micro-Pore Oil Filter", quantity: 1, unitPrice: 250.0, totalPrice: 250.0 }
-        ]
-      },
-      {
-        id: 2,
-        recordNumber: "REC1002",
-        bookingId: 2,
-        customerId: 4,
-        customerName: "Ravi Teja",
-        vehicleVin: "MALC51CP5MM102938",
-        vehiclePlate: "AP31GH3456",
-        vehicleModel: "Hyundai Creta",
-        bayNumber: "Bay 1",
-        servicePackage: "Brake Service",
-        assignedTechnicianId: 3,
-        assignedTechnicianName: "Kiran Varma",
-        serviceStatus: "IN_PROGRESS",
-        problemDescription: "Front brake pad wear and squeaking noise during deceleration",
-        workPerformed: "Caliper cleaning and disc rotor resurfacing underway",
-        dtcCodes: "C0035 (Wheel Speed Sensor Checked)",
-        technicianNotes: "Pads at 15% thickness. Replaced front brake pads.",
-        currentOdometer: 38200,
-        laborHours: 2.0,
-        laborRate: 400.0,
-        partsCost: 3200.0,
-        labourCost: 800.0,
-        totalCost: 4000.0,
-        invoiceNumber: "INV1002",
-        parts: [
-          { id: 3, partNumber: "BRK-PAD-HY02", partName: "Ceramic Front Brake Pads Set", quantity: 1, unitPrice: 3200.0, totalPrice: 3200.0 }
-        ]
-      }
-    ];
+    return [];
   },
 
   async getUserRecords(userId, plateNumber) {
@@ -1209,64 +1140,7 @@ export const api = {
       console.warn("Supabase getInvoices error:", e);
     }
 
-    return [
-      {
-        id: 1,
-        invoiceNumber: "INV1001",
-        recordId: 1,
-        bookingReference: "BK1001",
-        customerId: 1,
-        customerName: "Swamy Paila",
-        customerEmail: "swamy@gmail.com",
-        customerPhone: "9876543210",
-        vehicleVin: "1FTFW1E84KFA12091",
-        vehiclePlate: "AP39AB1234",
-        vehicleModel: "Toyota Corolla",
-        serviceDescription: "Oil Change - Engine oil and filter replaced",
-        laborTotal: 300.0,
-        partsTotal: 1200.0,
-        subtotal: 1500.0,
-        taxPercentage: 18.0,
-        taxAmount: 270.0,
-        totalAmount: 1770.0,
-        paymentStatus: "PAID",
-        paymentMethod: "UPI / NetBanking",
-        paidAt: "2026-09-20T11:45:00Z",
-        createdAt: "2026-09-20T11:30:00Z",
-        lineItems: [
-          { id: 1, itemType: "PART", description: "Oil Change (Synthetic 5W30 + Filter)", quantity: 1, unitPrice: 1200.0, totalPrice: 1200.0 },
-          { id: 2, itemType: "LABOR", description: "Technician Labour", quantity: 1, unitPrice: 300.0, totalPrice: 300.0 }
-        ]
-      },
-      {
-        id: 2,
-        invoiceNumber: "INV1002",
-        recordId: 2,
-        bookingReference: "BK1002",
-        customerId: 4,
-        customerName: "Ravi Teja",
-        customerEmail: "ravi.customer@gmail.com",
-        customerPhone: "9848012345",
-        vehicleVin: "MALC51CP5MM102938",
-        vehiclePlate: "AP31GH3456",
-        vehicleModel: "Hyundai Creta",
-        serviceDescription: "Brake Service - Pad replacement and disc resurfacing",
-        laborTotal: 800.0,
-        partsTotal: 3200.0,
-        subtotal: 4000.0,
-        taxPercentage: 18.0,
-        taxAmount: 720.0,
-        totalAmount: 4720.0,
-        paymentStatus: "PENDING",
-        paymentMethod: null,
-        paidAt: null,
-        createdAt: "2026-09-20T12:00:00Z",
-        lineItems: [
-          { id: 3, itemType: "PART", description: "Ceramic Front Brake Pads Set", quantity: 1, unitPrice: 3200.0, totalPrice: 3200.0 },
-          { id: 4, itemType: "LABOR", description: "Brake Overhaul & Fluid Bleed Labour", quantity: 1, unitPrice: 800.0, totalPrice: 800.0 }
-        ]
-      }
-    ];
+    return [];
   },
 
   async getUserInvoices(userId, email) {

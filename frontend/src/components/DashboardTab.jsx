@@ -69,7 +69,7 @@ export default function DashboardTab({ stats, bays, bookings, records, invoices,
             </div>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-white tracking-tight">${totalRevenue.toFixed(2)}</span>
+            <span className="text-3xl font-bold text-white tracking-tight">₹{totalRevenue.toLocaleString('en-IN')}</span>
             <span className="text-xs text-zinc-400 font-mono">{invoices.length} Invoices Generated</span>
           </div>
           <p className="text-xs text-zinc-400 leading-relaxed pt-3 border-t border-zinc-800/80">
@@ -109,7 +109,7 @@ export default function DashboardTab({ stats, bays, bookings, records, invoices,
                     </span>
                     <div>
                       <h3 className="text-sm font-semibold text-white">{bay.bayName}</h3>
-                      <div className="text-xs text-zinc-400 font-mono">${bay.hourlyRate}/hr &bull; {bay.bayType}</div>
+                      <div className="text-xs text-zinc-400 font-mono">₹{bay.hourlyRate}/hr &bull; {bay.bayType}</div>
                     </div>
                   </div>
 

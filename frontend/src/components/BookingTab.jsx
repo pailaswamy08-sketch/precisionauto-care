@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import CalendarPicker from './ui/CalendarPicker';
 import { Icon } from './ui/icon';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -183,6 +184,12 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
         </div>
       )}
 
+      {/* Calendar Date Picker Matrix */}
+      <CalendarPicker
+        selectedDate={selectedDate}
+        onSelectDate={(newD) => setSelectedDate(newD)}
+      />
+
       {/* Bay Availability Grid */}
       <Card className="p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-800">
@@ -213,7 +220,7 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
                 <tr key={bay.bayId} className="hover:bg-zinc-850/50 transition-colors">
                   <td className="py-3 px-3">
                     <div className="font-semibold text-white font-mono">{bay.bayNumber} &bull; {bay.bayName}</div>
-                    <div className="text-[11px] text-zinc-400 font-mono">${bay.hourlyRate}/hr &bull; {bay.bayType}</div>
+                    <div className="text-[11px] text-zinc-400 font-mono">₹{bay.hourlyRate}/hr &bull; {bay.bayType}</div>
                   </td>
 
                   {bay.slots?.map((slotObj) => {

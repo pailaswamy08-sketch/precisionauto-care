@@ -12,7 +12,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [paymentModalInvoice, setPaymentModalInvoice] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('FLEET_CREDIT');
+  const [paymentMethod, setPaymentMethod] = useState('UPI (Google Pay / PhonePe / Paytm)');
   const [processingPay, setProcessingPay] = useState(false);
 
   const totalInvoiced = invoices.reduce((sum, i) => sum + i.totalAmount, 0);
@@ -56,7 +56,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
             Dynamic Billing &amp; Invoices
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Dynamic labor, itemized parts calculation, and 18% GST invoice generation.
+            Dynamic labor, itemized parts calculation, and 18% GST invoice generation in Indian Rupee (₹).
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
             <span>Total Invoiced</span>
             <Icon name="receipt_long" size={16} />
           </div>
-          <div className="text-2xl font-bold text-white">${totalInvoiced.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-white font-mono">₹{totalInvoiced.toLocaleString('en-IN')}</div>
           <div className="text-xs text-zinc-400 font-mono">{invoices.length} Total Invoices</div>
         </Card>
 
@@ -89,7 +89,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
             <span>Collected Revenue</span>
             <Icon name="check_circle" size={16} />
           </div>
-          <div className="text-2xl font-bold text-emerald-400">${totalPaid.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-emerald-400 font-mono">₹{totalPaid.toLocaleString('en-IN')}</div>
           <div className="text-xs text-zinc-400 font-mono">
             {invoices.filter(i => i.paymentStatus === 'PAID').length} Paid Invoices
           </div>
@@ -125,10 +125,10 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                 <th className="py-2.5 px-3">Invoice #</th>
                 <th className="py-2.5 px-3">Client</th>
                 <th className="py-2.5 px-3">Vehicle</th>
-                <th className="py-2.5 px-3 text-right">Labor</th>
-                <th className="py-2.5 px-3 text-right">Parts</th>
-                <th className="py-2.5 px-3 text-right">GST (18%)</th>
-                <th className="py-2.5 px-3 text-right">Total</th>
+                <th className="py-2.5 px-3 text-right">Labor (₹)</th>
+                <th className="py-2.5 px-3 text-right">Parts (₹)</th>
+                <th className="py-2.5 px-3 text-right">GST 18% (₹)</th>
+                <th className="py-2.5 px-3 text-right">Total (₹)</th>
                 <th className="py-2.5 px-3 text-center">Status</th>
                 <th className="py-2.5 px-3 text-center">Actions</th>
               </tr>
@@ -147,11 +147,11 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                     <div className="text-white">{inv.vehiclePlate}</div>
                     <div className="text-[11px] text-zinc-400 font-sans">{inv.vehicleModel}</div>
                   </td>
-                  <td className="py-3 px-3 text-right font-mono text-zinc-300">${inv.laborTotal?.toFixed(2)}</td>
-                  <td className="py-3 px-3 text-right font-mono text-zinc-300">${inv.partsTotal?.toFixed(2)}</td>
-                  <td className="py-3 px-3 text-right font-mono text-zinc-300">${inv.taxAmount?.toFixed(2)}</td>
-                  <td className="py-3 px-3 text-right font-mono font-bold text-white">
-                    ${inv.totalAmount?.toFixed(2)}
+                  <td className="py-3 px-3 text-right font-mono text-zinc-300">₹{inv.laborTotal?.toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-3 text-right font-mono text-zinc-300">₹{inv.partsTotal?.toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-3 text-right font-mono text-zinc-300">₹{inv.taxAmount?.toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-3 text-right font-mono font-bold text-emerald-400">
+                    ₹{inv.totalAmount?.toLocaleString('en-IN')}
                   </td>
                   <td className="py-3 px-3 text-center">
                     <Badge variant={inv.paymentStatus === 'PAID' ? 'success' : 'warning'}>
@@ -173,7 +173,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                         <Button
                           size="sm"
                           onClick={() => setPaymentModalInvoice(inv)}
-                          className="h-7 text-xs"
+                          className="h-7 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white"
                         >
                           Pay
                         </Button>
@@ -203,7 +203,7 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
               </div>
               <div className="flex justify-between font-bold pt-2 border-t border-zinc-800">
                 <span className="text-zinc-300">Total:</span>
-                <span className="text-emerald-400">${paymentModalInvoice.totalAmount?.toFixed(2)}</span>
+                <span className="text-emerald-400">₹{paymentModalInvoice.totalAmount?.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
@@ -215,9 +215,10 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-md px-3 py-2 text-xs text-zinc-100 focus:outline-none"
                 >
-                  <option value="FLEET_CREDIT">Corporate Fleet Credit Line (Net 30)</option>
-                  <option value="CORPORATE_CARD">Corporate Fleet Card (Visa/Mastercard)</option>
-                  <option value="ACH_TRANSFER">Automated Clearing House (ACH Transfer)</option>
+                  <option value="UPI (Google Pay / PhonePe / Paytm)">UPI (Google Pay / PhonePe / Paytm)</option>
+                  <option value="Credit / Debit Card (RuPay / Visa / Mastercard)">Credit / Debit Card (RuPay / Visa / Mastercard)</option>
+                  <option value="NetBanking (SBI / HDFC / ICICI / Axis)">NetBanking (SBI / HDFC / ICICI / Axis)</option>
+                  <option value="Cash at Counter">Cash Payment at Garage Counter</option>
                 </select>
               </div>
 
@@ -234,8 +235,9 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
                   type="submit"
                   size="sm"
                   disabled={processingPay}
+                  className="bg-emerald-600 hover:bg-emerald-500 font-bold"
                 >
-                  {processingPay ? 'Authorizing...' : 'Authorize & Pay'}
+                  {processingPay ? 'Authorizing...' : `Pay ₹${paymentModalInvoice.totalAmount?.toLocaleString('en-IN')}`}
                 </Button>
               </div>
             </form>

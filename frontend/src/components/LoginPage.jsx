@@ -10,11 +10,11 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [organization, setOrganization] = useState('');
   const [role, setRole] = useState('CLIENT');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
@@ -40,12 +40,10 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Canvas Background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#18181b';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Subtle Noise Grid Lines
     for (let i = 0; i < 3; i++) {
       ctx.strokeStyle = '#3f3f46';
       ctx.lineWidth = 1;
@@ -55,7 +53,6 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
       ctx.stroke();
     }
 
-    // Noise dots
     for (let i = 0; i < 25; i++) {
       ctx.fillStyle = '#52525b';
       ctx.beginPath();
@@ -63,7 +60,6 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
       ctx.fill();
     }
 
-    // Draw characters with distinct rotations
     ctx.font = 'bold 20px "Courier New", monospace';
     ctx.textBaseline = 'middle';
 
@@ -147,8 +143,9 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
         email,
         password,
         fullName,
+        phone,
         role,
-        organization: organization || 'Fleet Logistics'
+        organization: organization || 'PrecisionAuto Customer'
       });
       setSuccessMsg(`Account created for ${newUser.fullName}! Authenticating...`);
       setTimeout(() => {
@@ -162,31 +159,28 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
     }
   };
 
-  const executeGoogleLogin = async () => {
-    setError(null);
-    setSuccessMsg(null);
-    setGoogleLoading(true);
-
-    try {
-      const googleUser = await api.loginWithGoogle();
-      setSuccessMsg(`Google Authentication Verified! Welcome, ${googleUser.fullName}.`);
-      setTimeout(() => {
-        if (onLoginSuccess) onLoginSuccess(googleUser);
-      }, 500);
-    } catch (err) {
-      setError(err.message || "Google Sign-In was unsuccessful.");
-    } finally {
-      setGoogleLoading(false);
+  // Quick 1-Click Demo Logins
+  const handleQuickDemo = (demoRole) => {
+    if (demoRole === 'USER') {
+      setEmail('swamy@gmail.com');
+      setPassword('Client@123');
+    } else if (demoRole === 'ADMIN') {
+      setEmail('admin@precisionauto.com');
+      setPassword('Admin@123');
+    } else if (demoRole === 'TECH') {
+      setEmail('ravi@precisionauto.com');
+      setPassword('Tech@123');
     }
+    setCaptchaInput(captchaCode);
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[#09090b]">
-      <Card className="w-full max-w-md p-8 bg-zinc-900/90 border border-zinc-800 rounded-lg shadow-2xl space-y-6 relative backdrop-blur-md">
+      <Card className="w-full max-w-md p-8 bg-zinc-900/95 border border-zinc-800 rounded-3xl shadow-2xl space-y-6 relative backdrop-blur-md">
         {isModal && onClose && (
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 text-zinc-400 hover:text-white p-1 rounded-md transition-colors"
+            className="absolute top-5 right-5 text-zinc-400 hover:text-white p-1 rounded-xl transition-colors"
           >
             <Icon name="close" size={18} />
           </button>
@@ -194,49 +188,51 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
 
         {/* Header Branding */}
         <div className="space-y-1 text-center sm:text-left">
-          <div className="w-10 h-10 rounded-md bg-zinc-800 flex items-center justify-center mb-3 border border-zinc-700">
-            <Icon name="precision_manufacturing" size={20} />
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center mb-3 text-white shadow-lg shadow-blue-900/30">
+            <Icon name="precision_manufacturing" size={22} />
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            {isRegister ? 'Create an Account' : 'Sign In to PrecisionAuto'}
+            {isRegister ? 'Create Customer Account' : 'Sign In to PrecisionAuto'}
           </h1>
           <p className="text-xs text-zinc-400">
             {isRegister
-              ? 'Register with your fleet credentials to access operations'
-              : 'Enter your credentials or continue with Google to access the platform'}
+              ? 'Register as a customer to manage vehicles, book service bays, and track invoices.'
+              : 'Enter your credentials to access your garage management portal.'}
           </p>
         </div>
 
-        {/* Sign in with Google Button */}
-        <div className="space-y-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={executeGoogleLogin}
-            disabled={loading || googleLoading}
-            className="w-full h-10 text-xs font-semibold rounded-md border-zinc-800 bg-zinc-950 hover:bg-zinc-850 text-zinc-100 flex items-center justify-center gap-3 transition-colors shadow-sm"
-          >
-            {/* Google Multicolor Logo */}
-            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-            </svg>
-            <span>{googleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
-          </Button>
-
-          {/* Divider */}
-          <div className="relative flex items-center justify-center py-1">
-            <div className="border-t border-zinc-800 w-full"></div>
-            <span className="bg-zinc-900 px-3 text-[10px] text-zinc-500 uppercase tracking-widest font-mono absolute">
-              Or with email
-            </span>
+        {/* 1-Click Quick Demo Switchers */}
+        <div className="p-3.5 bg-zinc-950/80 rounded-2xl border border-zinc-800/80 space-y-2">
+          <span className="text-[10px] text-zinc-400 uppercase font-mono font-bold block text-center">
+            Quick 1-Click Demo Accounts
+          </span>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('USER')}
+              className="py-1.5 px-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/50 border border-blue-900/40 text-blue-300 text-[11px] font-bold text-center transition-colors"
+            >
+              👤 Swamy (User)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('TECH')}
+              className="py-1.5 px-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/50 border border-amber-900/40 text-amber-300 text-[11px] font-bold text-center transition-colors"
+            >
+              🧑🔧 Ravi (Tech)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('ADMIN')}
+              className="py-1.5 px-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/50 border border-purple-900/40 text-purple-300 text-[11px] font-bold text-center transition-colors"
+            >
+              👨💼 Admin Manager
+            </button>
           </div>
         </div>
 
         {/* Auth Mode Toggle Tabs */}
-        <div className="grid grid-cols-2 p-1 bg-zinc-950 border border-zinc-800 rounded-md">
+        <div className="grid grid-cols-2 p-1 bg-zinc-950 border border-zinc-800 rounded-xl">
           <button
             type="button"
             onClick={() => {
@@ -244,9 +240,9 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
               setError(null);
               setSuccessMsg(null);
             }}
-            className={`py-1.5 text-xs font-medium rounded transition-colors ${
+            className={`py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               !isRegister
-                ? 'bg-zinc-800 text-white font-semibold shadow-sm'
+                ? 'bg-zinc-800 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -259,9 +255,9 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
               setError(null);
               setSuccessMsg(null);
             }}
-            className={`py-1.5 text-xs font-medium rounded transition-colors ${
+            className={`py-1.5 text-xs font-semibold rounded-lg transition-colors ${
               isRegister
-                ? 'bg-zinc-800 text-white font-semibold shadow-sm'
+                ? 'bg-zinc-800 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -271,14 +267,14 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
 
         {/* Status Messages */}
         {error && (
-          <div className="p-3 rounded-md bg-red-950/60 border border-red-800/60 text-red-200 text-xs flex items-start gap-2.5">
+          <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-800/60 text-red-200 text-xs flex items-start gap-2.5">
             <Icon name="error" size={16} />
             <span className="leading-tight">{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-100 text-xs flex items-start gap-2.5">
+          <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-200 text-xs flex items-start gap-2.5">
             <Icon name="check_circle" size={16} />
             <span className="leading-tight">{successMsg}</span>
           </div>
@@ -289,56 +285,58 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
           {isRegister && (
             <>
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-300">Full Name</label>
+                <label className="text-xs font-semibold text-zinc-300">Full Name *</label>
                 <Input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Alex Mercer"
+                  placeholder="e.g. Swamy Paila"
+                  className="h-9"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-300">Account Role</label>
+                <label className="text-xs font-semibold text-zinc-300">Phone Number *</label>
+                <Input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="9876543210"
+                  className="h-9 font-mono"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-zinc-300">Account Type</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="flex h-9 w-full rounded-md border border-zinc-800 bg-zinc-950/80 px-3 py-1.5 text-xs text-zinc-100 focus-visible:outline-none focus-visible:border-zinc-400"
+                  className="flex h-9 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 focus:outline-none"
                 >
-                  <option value="CLIENT">Client / Fleet Customer</option>
-                  <option value="TECHNICIAN">Service Technician</option>
-                  <option value="ADMIN">System Administrator</option>
+                  <option value="CLIENT">👤 Customer / Vehicle Owner</option>
+                  <option value="TECHNICIAN">🧑🔧 Workshop Technician</option>
+                  <option value="ADMIN">👨💼 Garage Manager (Admin)</option>
                 </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-300">Organization / Fleet Name</label>
-                <Input
-                  type="text"
-                  value={organization}
-                  onChange={(e) => setOrganization(e.target.value)}
-                  placeholder="e.g. FleetCorp Express"
-                />
               </div>
             </>
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-300">Email Address</label>
+            <label className="text-xs font-semibold text-zinc-300">Email Address *</label>
             <Input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@organization.com"
+              placeholder="swamy@gmail.com"
+              className="h-9"
             />
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-zinc-300">Password</label>
-            </div>
+            <label className="text-xs font-semibold text-zinc-300">Password *</label>
             <div className="relative">
               <Input
                 type={showPassword ? 'text' : 'password'}
@@ -346,7 +344,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="pr-10"
+                className="pr-10 h-9"
               />
               <button
                 type="button"
@@ -361,14 +359,13 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
           {/* CAPTCHA Security Verification */}
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
-                <Icon name="verified_user" size={14} /> Security Verification (CAPTCHA)
+              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                <Icon name="verified_user" size={14} className="text-blue-400" /> Security Check (CAPTCHA)
               </label>
               <button
                 type="button"
                 onClick={handleRefreshCaptcha}
-                className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition-colors"
-                title="Generate new CAPTCHA challenge"
+                className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
               >
                 <Icon name="refresh" size={13} />
                 <span>Refresh</span>
@@ -376,8 +373,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Rendered Canvas Code */}
-              <div className="border border-zinc-800 rounded-md overflow-hidden bg-zinc-950 shrink-0 select-none">
+              <div className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950 shrink-0 select-none">
                 <canvas
                   ref={canvasRef}
                   width="130"
@@ -388,15 +384,14 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
                 />
               </div>
 
-              {/* User Entry */}
               <Input
                 type="text"
                 required
                 maxLength={5}
                 value={captchaInput}
                 onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
-                placeholder="Enter 5 characters"
-                className="font-mono text-center tracking-widest uppercase font-semibold h-9"
+                placeholder="Enter 5 chars"
+                className="font-mono text-center tracking-widest uppercase font-bold h-9 rounded-xl"
               />
             </div>
           </div>
@@ -404,15 +399,14 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-3 text-xs font-semibold rounded-md"
+            className="w-full h-10 mt-3 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/30"
           >
-            {loading ? 'Authenticating with Supabase...' : isRegister ? 'Create Account' : 'Sign In'}
+            {loading ? 'Authenticating...' : isRegister ? 'Create Account' : 'Sign In to Portal'}
           </Button>
         </form>
 
-        {/* Footer Meta */}
         <div className="pt-3 border-t border-zinc-800/80 text-center text-xs text-zinc-500">
-          PrecisionAuto Care &bull; PostgreSQL on Supabase
+          PrecisionAuto Care &bull; Multi-Role Garage Platform
         </div>
       </Card>
     </div>

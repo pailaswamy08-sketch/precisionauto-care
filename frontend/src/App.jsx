@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import DashboardTab from './components/DashboardTab';
-import BookingTab from './components/BookingTab';
-import HistoryTab from './components/HistoryTab';
+import UserPortal from './components/user/UserPortal';
+import AdminPortal from './components/admin/AdminPortal';
 import TechnicianTab from './components/TechnicianTab';
-import BillingTab from './components/BillingTab';
 import ArchitectureTab from './components/ArchitectureTab';
 import ReviewDtiTab from './components/ReviewDtiTab';
 import LoginPage from './components/LoginPage';
@@ -14,43 +12,6 @@ import { Button } from './components/ui/button';
 import { Card } from './components/ui/card';
 
 export default function App() {
-  const normalizeTab = (hashStr) => {
-    const raw = (hashStr || '').replace('#', '').replace('/', '').trim().toLowerCase();
-    if (!raw || raw === 'dashboard') return 'dashboard';
-    if (raw === 'login') return 'login';
-    if (raw === 'booking' || raw === 'bookings') return 'booking';
-    if (raw === 'technician' || raw === 'tech') return 'technician';
-    if (raw === 'history' || raw === 'records') return 'history';
-    if (raw === 'billing' || raw === 'invoices') return 'billing';
-    if (raw === 'architecture' || raw === 'arch' || raw === 'eureka') return 'architecture';
-    if (raw === 'review1' || raw === 'review' || raw === 'dti') return 'review1';
-    return '404';
-  };
-
-  const [activeTab, setActiveTabState] = useState(() => {
-    const init = normalizeTab(window.location.hash || window.location.pathname);
-    return init === '404' ? 'dashboard' : init;
-  });
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('precision_jwt_token');
-  });
-
-  const setActiveTab = (tab) => {
-    const normalized = normalizeTab(tab);
-    setActiveTabState(normalized);
-    window.location.hash = normalized;
-  };
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const normalized = normalizeTab(window.location.hash);
-      setActiveTabState(normalized);
-    };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-  
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem('precision_user');
     if (saved) {
@@ -58,39 +19,70 @@ export default function App() {
     }
     return {
       userId: 1,
-      email: 'alex@fleetcorp.com',
-      fullName: 'Alex Mercer',
+      email: 'swamy@gmail.com',
+      fullName: 'Swamy Paila',
       role: 'CLIENT',
-      organization: 'FleetCorp Express'
+      organization: 'Individual Customer',
+      phone: '9876543210'
     };
   });
 
+  const [activeRole, setActiveRole] = useState(() => {
+    return currentUser?.role || 'CLIENT';
+  });
+
+  const [activeTab, setActiveTab] = useState('portal'); // 'portal' | 'architecture' | 'review1' | 'login'
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem('precision_jwt_token');
+  });
+
+  // Master State Across Domains
+  const [vehicles, setVehicles] = useState([]);
+  const [servicesCatalog, setServicesCatalog] = useState([]);
   const [bays, setBays] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [records, setRecords] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [technicians, setTechnicians] = useState([]);
-  const [stats, setStats] = useState(null);
+  const [customers, setCustomers] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const loadAllData = async () => {
     try {
       setLoading(true);
-      const [baysData, bookingsData, recordsData, invoicesData, techsData, statsData] = await Promise.all([
+      const [
+        vehiclesData,
+        servicesData,
+        baysData,
+        bookingsData,
+        recordsData,
+        invoicesData,
+        techsData,
+        customersData,
+        analyticsData
+      ] = await Promise.all([
+        api.getVehicles(),
+        api.getServicesCatalog(),
         api.getBays(),
         api.getBookings(),
         api.getRecords(),
         api.getInvoices(),
         api.getTechnicians(),
-        api.getBillingStats()
+        api.getCustomers(),
+        api.getAnalyticsReport()
       ]);
 
+      setVehicles(vehiclesData || []);
+      setServicesCatalog(servicesData || []);
       setBays(baysData || []);
       setBookings(bookingsData || []);
       setRecords(recordsData || []);
       setInvoices(invoicesData || []);
       setTechnicians(techsData || []);
-      setStats(statsData);
+      setCustomers(customersData || []);
+      setAnalytics(analyticsData);
     } catch (err) {
       console.error("Initial load error:", err);
     } finally {
@@ -102,34 +94,122 @@ export default function App() {
     loadAllData();
   }, []);
 
-  const handleBookingCreated = (newBooking) => {
-    setBookings(prev => [newBooking, ...prev]);
+  // Quick Role Switcher Handler (e.g. Swamy Customer, Ravi Tech, Garage Admin)
+  const handleSwitchRole = (role) => {
+    setActiveRole(role);
+    setActiveTab('portal');
+
+    if (role === 'CLIENT') {
+      const user = {
+        userId: 1,
+        email: 'swamy@gmail.com',
+        fullName: 'Swamy Paila',
+        role: 'CLIENT',
+        organization: 'Individual Customer',
+        phone: '9876543210'
+      };
+      setCurrentUser(user);
+      localStorage.setItem('precision_user', JSON.stringify(user));
+    } else if (role === 'ADMIN') {
+      const admin = {
+        userId: 99,
+        email: 'admin@precisionauto.com',
+        fullName: 'Garage Manager (Admin)',
+        role: 'ADMIN',
+        organization: 'PrecisionAuto Headquarters',
+        phone: '9123456780'
+      };
+      setCurrentUser(admin);
+      localStorage.setItem('precision_user', JSON.stringify(admin));
+    } else if (role === 'TECHNICIAN') {
+      const tech = {
+        userId: 2,
+        email: 'ravi@precisionauto.com',
+        fullName: 'Ravi Kumar',
+        role: 'TECHNICIAN',
+        organization: 'Master Diagnostics Crew',
+        phone: '9876500001',
+        specialization: 'Engine & Electrical Service'
+      };
+      setCurrentUser(tech);
+      localStorage.setItem('precision_user', JSON.stringify(tech));
+    }
+  };
+
+  // User Vehicle Handlers
+  const handleVehicleAdded = (newV) => {
+    setVehicles(prev => [newV, ...prev]);
+  };
+
+  const handleVehicleUpdated = (updatedV) => {
+    setVehicles(prev => prev.map(v => v.id === updatedV.id ? updatedV : v));
+  };
+
+  const handleVehicleDeleted = (vId) => {
+    setVehicles(prev => prev.filter(v => v.id !== vId));
+  };
+
+  // Bookings Handlers
+  const handleBookingCreated = (newB) => {
+    setBookings(prev => [newB, ...prev]);
     api.getRecords().then(setRecords);
   };
 
-  const handleBookingCancelled = (bookingId) => {
-    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'CANCELLED' } : b));
+  const handleBookingCancelled = (bId) => {
+    setBookings(prev => prev.map(b => b.id === bId ? { ...b, status: 'CANCELLED' } : b));
   };
 
-  const handleRecordUpdated = (updatedRecord) => {
-    setRecords(prev => prev.map(r => r.id === updatedRecord.id ? updatedRecord : r));
+  const handleBookingUpdated = (updatedB) => {
+    setBookings(prev => prev.map(b => b.id === updatedB.id ? updatedB : b));
+  };
+
+  // Service Catalog Handlers
+  const handleServiceAdded = (newS) => {
+    setServicesCatalog(prev => [...prev, newS]);
+  };
+
+  const handleServiceUpdated = (updatedS) => {
+    setServicesCatalog(prev => prev.map(s => s.id === updatedS.id ? updatedS : s));
+  };
+
+  // Bay Handlers
+  const handleBayAdded = (newB) => {
+    setBays(prev => [...prev, newB]);
+  };
+
+  const handleBayUpdated = (bayId, isOperational) => {
+    setBays(prev => prev.map(b => b.id === bayId ? { ...b, isOperational } : b));
+  };
+
+  // Tech & Customer Handlers
+  const handleTechnicianAdded = (newT) => {
+    setTechnicians(prev => [...prev, newT]);
+  };
+
+  const handleTechnicianUpdated = (updatedT) => {
+    setTechnicians(prev => prev.map(t => t.id === updatedT.id ? { ...t, ...updatedT } : t));
+  };
+
+  const handleCustomerUpdated = (custId, status) => {
+    setCustomers(prev => prev.map(c => c.id === custId ? { ...c, status } : c));
+  };
+
+  // Record & Invoice Handlers
+  const handleRecordUpdated = (updatedR) => {
+    setRecords(prev => prev.map(r => r.id === updatedR.id ? updatedR : r));
     api.getInvoices().then(setInvoices);
   };
 
-  const handleInvoicePaid = (paidInvoice) => {
-    setInvoices(prev => prev.map(i => i.id === paidInvoice.id ? paidInvoice : i));
-  };
-
-  const handleSelectInvoice = () => {
-    setActiveTab('billing');
+  const handleInvoicePaid = (paidInv) => {
+    setInvoices(prev => prev.map(i => i.id === paidInv.id ? { ...i, ...paidInv } : i));
   };
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
+    setActiveRole(user.role || 'CLIENT');
     setIsAuthenticated(true);
     setShowLoginModal(false);
-    setActiveTabState('dashboard');
-    window.location.hash = 'dashboard';
+    setActiveTab('portal');
     loadAllData();
   };
 
@@ -137,8 +217,7 @@ export default function App() {
     localStorage.removeItem('precision_jwt_token');
     localStorage.removeItem('precision_user');
     setIsAuthenticated(false);
-    setActiveTabState('login');
-    window.location.hash = 'login';
+    setActiveTab('login');
   };
 
   if (!isAuthenticated || activeTab === 'login') {
@@ -150,13 +229,22 @@ export default function App() {
     );
   }
 
+  // Filtered customer view datasets
+  const userVehicles = vehicles.filter(v => v.userId === currentUser?.userId || v.userId === 1);
+  const userBookings = bookings.filter(b => b.customerId === currentUser?.userId || b.customerEmail?.toLowerCase() === currentUser?.email?.toLowerCase());
+  const userRecords = records.filter(r => r.customerId === currentUser?.userId || r.vehiclePlate === 'AP39AB1234');
+  const userInvoices = invoices.filter(i => i.customerId === currentUser?.userId || i.customerEmail?.toLowerCase() === currentUser?.email?.toLowerCase());
+
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col antialiased">
       {/* Top Floating Pill Navigation */}
       <Navbar
+        activeRole={activeRole}
+        setActiveRole={setActiveRole}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         currentUser={currentUser}
+        onSwitchUser={handleSwitchRole}
         onOpenLoginModal={() => setShowLoginModal(true)}
         onSignOut={handleSignOut}
       />
@@ -173,56 +261,73 @@ export default function App() {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-4">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-2">
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-64 space-y-3">
-            <div className="w-8 h-8 border-2 border-zinc-200 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-xs text-zinc-400 font-mono">Loading operations workspace...</p>
+          <div className="flex flex-col items-center justify-center h-80 space-y-3">
+            <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-xs text-zinc-400 font-mono">Synchronizing garage operations database...</p>
           </div>
         ) : (
           <>
-            {activeTab === 'dashboard' && (
-              <DashboardTab
-                stats={stats}
-                bays={bays}
-                bookings={bookings}
-                records={records}
-                invoices={invoices}
-                onNavigate={setActiveTab}
-              />
-            )}
+            {/* Direct Portal Routing Based on Role & Tab */}
+            {activeTab === 'portal' && (
+              <>
+                {/* 👤 USER / CUSTOMER PORTAL */}
+                {activeRole === 'CLIENT' && (
+                  <UserPortal
+                    currentUser={currentUser}
+                    vehicles={userVehicles.length > 0 ? userVehicles : vehicles.slice(0, 3)}
+                    servicesCatalog={servicesCatalog}
+                    bookings={userBookings.length > 0 ? userBookings : bookings.slice(0, 2)}
+                    records={userRecords.length > 0 ? userRecords : records.slice(0, 2)}
+                    invoices={userInvoices.length > 0 ? userInvoices : invoices.slice(0, 2)}
+                    onVehicleAdded={handleVehicleAdded}
+                    onVehicleUpdated={handleVehicleUpdated}
+                    onVehicleDeleted={handleVehicleDeleted}
+                    onBookingCreated={handleBookingCreated}
+                    onBookingCancelled={handleBookingCancelled}
+                    onInvoicePaid={handleInvoicePaid}
+                    onProfileUpdated={(up) => setCurrentUser(up)}
+                  />
+                )}
 
-            {activeTab === 'booking' && (
-              <BookingTab
-                bays={bays}
-                bookings={bookings}
-                currentUser={currentUser}
-                onBookingCreated={handleBookingCreated}
-                onBookingCancelled={handleBookingCancelled}
-              />
-            )}
+                {/* 👨💼 ADMIN / GARAGE MANAGER PORTAL */}
+                {activeRole === 'ADMIN' && (
+                  <AdminPortal
+                    currentUser={currentUser}
+                    customers={customers}
+                    vehicles={vehicles}
+                    technicians={technicians}
+                    services={servicesCatalog}
+                    bays={bays}
+                    bookings={bookings}
+                    records={records}
+                    invoices={invoices}
+                    analytics={analytics}
+                    onCustomerUpdated={handleCustomerUpdated}
+                    onTechnicianAdded={handleTechnicianAdded}
+                    onTechnicianUpdated={handleTechnicianUpdated}
+                    onServiceAdded={handleServiceAdded}
+                    onServiceUpdated={handleServiceUpdated}
+                    onBayAdded={handleBayAdded}
+                    onBayUpdated={handleBayUpdated}
+                    onBookingUpdated={handleBookingUpdated}
+                    onBookingCancelled={handleBookingCancelled}
+                    onInvoicePaid={handleInvoicePaid}
+                  />
+                )}
 
-            {activeTab === 'technician' && (
-              <TechnicianTab
-                records={records}
-                technicians={technicians}
-                onRecordUpdated={handleRecordUpdated}
-                onNavigateToBilling={handleSelectInvoice}
-              />
-            )}
-
-            {activeTab === 'history' && (
-              <HistoryTab
-                records={records}
-                onSelectInvoice={handleSelectInvoice}
-              />
-            )}
-
-            {activeTab === 'billing' && (
-              <BillingTab
-                invoices={invoices}
-                onInvoicePaid={handleInvoicePaid}
-              />
+                {/* 🧑🔧 TECHNICIAN WORKBENCH */}
+                {activeRole === 'TECHNICIAN' && (
+                  <TechnicianTab
+                    records={records}
+                    technicians={technicians}
+                    currentUser={currentUser}
+                    onRecordUpdated={handleRecordUpdated}
+                    onNavigateToBilling={() => setActiveRole('ADMIN')}
+                  />
+                )}
+              </>
             )}
 
             {activeTab === 'architecture' && (
@@ -232,24 +337,6 @@ export default function App() {
             {activeTab === 'review1' && (
               <ReviewDtiTab />
             )}
-
-            {activeTab === '404' && (
-              <Card className="p-8 text-center max-w-md mx-auto space-y-4">
-                <div className="w-12 h-12 rounded-lg bg-zinc-850 flex items-center justify-center mx-auto border border-zinc-700">
-                  <Icon name="warning" size={24} />
-                </div>
-                <h2 className="text-lg font-bold text-white">Section Not Found</h2>
-                <p className="text-xs text-zinc-400">
-                  The requested platform tab does not exist.
-                </p>
-                <Button
-                  onClick={() => setActiveTab('dashboard')}
-                  className="gap-2 text-xs"
-                >
-                  <Icon name="home" size={16} /> Return to Dashboard
-                </Button>
-              </Card>
-            )}
           </>
         )}
       </main>
@@ -258,12 +345,12 @@ export default function App() {
       <footer className="no-print border-t border-zinc-800/80 bg-zinc-950 py-6 mt-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <div>
-            <span className="font-semibold text-white">
-              PrecisionAuto Care Platform
-            </span> &bull; PS024 Fleet Maintenance & Microservices
+            <span className="font-bold text-white tracking-tight">
+              PrecisionAuto Care
+            </span> &bull; Multi-Role Garage Management &amp; Customer Portal
           </div>
           <div className="font-mono text-[11px] text-zinc-500">
-            24SDCS03R &bull; Team PS24-S54-15 &bull; Supabase PostgreSQL
+            PS024 &bull; Team PS24-S54-15 &bull; Supabase PostgreSQL
           </div>
         </div>
       </footer>

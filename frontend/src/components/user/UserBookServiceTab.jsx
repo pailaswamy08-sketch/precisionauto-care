@@ -145,15 +145,7 @@ export default function UserBookServiceTab({
     );
   });
 
-  const currentVehicle = vehicles.find(v => v.id === Number(selectedVehicleId)) || preselectedVehicle || vehicles[0] || {
-    id: 1,
-    plateNumber: 'AP39AB1234',
-    make: 'Toyota',
-    model: 'Corolla',
-    vin: '1FTFW1E84KFA12091',
-    year: 2022,
-    vehicleType: 'Car'
-  };
+  const currentVehicle = vehicles.find(v => v.id === Number(selectedVehicleId)) || preselectedVehicle || vehicles[0] || null;
 
   const currentService = servicesCatalog.find(s => s.serviceName === selectedServiceName) || {
     serviceName: 'Oil Change',
@@ -177,8 +169,8 @@ export default function UserBookServiceTab({
 
   const handleBookService = async (e) => {
     if (e) e.preventDefault();
-    if (vehicles.length === 0 && !selectedVehicleId) {
-      setErrorMsg("Please add a vehicle to your profile before booking.");
+    if (!currentVehicle) {
+      setErrorMsg("Please add or select a vehicle from your profile before confirming the booking.");
       return;
     }
 
@@ -189,10 +181,10 @@ export default function UserBookServiceTab({
     const bayName = selectedBay?.bayName || selectedBay?.bayNumber || 'Bay-01 Diagnostic Station';
 
     const payload = {
-      customerId: currentUser?.userId || 1,
-      customerName: currentUser?.fullName || 'Swamy Paila',
-      customerEmail: currentUser?.email || 'swamy@gmail.com',
-      customerPhone: currentUser?.phone || '9876543210',
+      customerId: currentUser?.userId || currentUser?.id,
+      customerName: currentUser?.fullName || currentUser?.email?.split('@')[0] || 'Customer',
+      customerEmail: currentUser?.email || '',
+      customerPhone: currentUser?.phone || '',
       vehiclePlate: currentVehicle.plateNumber,
       vehicleModel: `${currentVehicle.make} ${currentVehicle.model}`,
       vehicleVin: currentVehicle.vin || `VIN-${currentVehicle.plateNumber}`,
@@ -799,13 +791,21 @@ export default function UserBookServiceTab({
             </div>
 
             <div className="flex items-center gap-2.5 sm:border-l sm:border-zinc-800 sm:pl-3">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
-                ✓
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] ${
+                currentVehicle ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+              }`}>
+                {currentVehicle ? '✓' : '!'}
               </span>
               <div>
                 <span className="text-zinc-500 font-mono text-[10px] block">CHOSEN VEHICLE:</span>
-                <span className="text-white font-bold">{currentVehicle.make} {currentVehicle.model}</span>
-                <span className="text-blue-400 font-mono text-[11px] ml-1.5">[{currentVehicle.plateNumber}]</span>
+                {currentVehicle ? (
+                  <div>
+                    <span className="text-white font-bold">{currentVehicle.make} {currentVehicle.model}</span>
+                    <span className="text-blue-400 font-mono text-[11px] ml-1.5">[{currentVehicle.plateNumber}]</span>
+                  </div>
+                ) : (
+                  <span className="text-amber-400 font-semibold">No vehicle selected (Click Back to select)</span>
+                )}
               </div>
             </div>
           </div>
@@ -903,7 +903,9 @@ export default function UserBookServiceTab({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-zinc-300">
                 <div className="flex justify-between">
                   <span className="text-zinc-500">Vehicle:</span>
-                  <span className="text-white font-bold">{currentVehicle.make} {currentVehicle.model} ({currentVehicle.plateNumber})</span>
+                  <span className="text-white font-bold">
+                    {currentVehicle ? `${currentVehicle.make} ${currentVehicle.model} (${currentVehicle.plateNumber})` : 'None Selected'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-500">Service Bay:</span>

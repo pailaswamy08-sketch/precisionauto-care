@@ -204,11 +204,34 @@ export default function App() {
     );
   }
 
-  // Filtered customer view datasets
-  const userVehicles = vehicles.filter(v => v.userId === currentUser?.userId || v.userId === 1);
-  const userBookings = bookings.filter(b => b.customerId === currentUser?.userId || b.customerEmail?.toLowerCase() === currentUser?.email?.toLowerCase());
-  const userRecords = records.filter(r => r.customerId === currentUser?.userId || r.vehiclePlate === 'AP39AB1234');
-  const userInvoices = invoices.filter(i => i.customerId === currentUser?.userId || i.customerEmail?.toLowerCase() === currentUser?.email?.toLowerCase());
+  // Strictly isolate customer datasets by logged-in user ID and email
+  const userVehicles = vehicles.filter(v => 
+    (currentUser?.userId && v.userId === currentUser.userId) || 
+    (currentUser?.id && v.userId === currentUser.id) ||
+    (currentUser?.email && v.customerEmail && v.customerEmail.toLowerCase() === currentUser.email.toLowerCase())
+  );
+
+  const userVehiclePlates = new Set(userVehicles.map(v => (v.plateNumber || '').toUpperCase()));
+
+  const userBookings = bookings.filter(b => 
+    (currentUser?.userId && b.customerId === currentUser.userId) || 
+    (currentUser?.id && b.customerId === currentUser.id) ||
+    (currentUser?.email && b.customerEmail && b.customerEmail.toLowerCase() === currentUser.email.toLowerCase())
+  );
+
+  const userRecords = records.filter(r => 
+    (currentUser?.userId && r.customerId === currentUser.userId) || 
+    (currentUser?.id && r.customerId === currentUser.id) ||
+    (currentUser?.email && r.customerEmail && r.customerEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+    (r.vehiclePlate && userVehiclePlates.has(r.vehiclePlate.toUpperCase()))
+  );
+
+  const userInvoices = invoices.filter(i => 
+    (currentUser?.userId && i.customerId === currentUser.userId) || 
+    (currentUser?.id && i.customerId === currentUser.id) ||
+    (currentUser?.email && i.customerEmail && i.customerEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+    (i.vehiclePlate && userVehiclePlates.has(i.vehiclePlate.toUpperCase()))
+  );
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col antialiased">
@@ -251,11 +274,11 @@ export default function App() {
                 {activeRole === 'CLIENT' && (
                   <UserPortal
                     currentUser={currentUser}
-                    vehicles={userVehicles.length > 0 ? userVehicles : vehicles.slice(0, 3)}
+                    vehicles={userVehicles}
                     servicesCatalog={servicesCatalog}
-                    bookings={userBookings.length > 0 ? userBookings : bookings.slice(0, 2)}
-                    records={userRecords.length > 0 ? userRecords : records.slice(0, 2)}
-                    invoices={userInvoices.length > 0 ? userInvoices : invoices.slice(0, 2)}
+                    bookings={userBookings}
+                    records={userRecords}
+                    invoices={userInvoices}
                     onVehicleAdded={handleVehicleAdded}
                     onVehicleUpdated={handleVehicleUpdated}
                     onVehicleDeleted={handleVehicleDeleted}

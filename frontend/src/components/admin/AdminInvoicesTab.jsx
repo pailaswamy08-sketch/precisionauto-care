@@ -45,16 +45,11 @@ export default function AdminInvoicesTab({ invoices = [], onInvoicePaid }) {
     <div className="space-y-6">
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-lg">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-              <Icon name="receipt_long" size={22} />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Garage Billing &amp; Invoices</h2>
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <Icon name="receipt_long" size={22} />
           </div>
-          <p className="text-xs text-zinc-400">
-            Master billing ledger &bull; Automated 18% GST tax invoices, settlement modes, and accounting reports.
-          </p>
+          <h2 className="text-xl font-bold text-white tracking-tight">Invoices &amp; Billing Ledger</h2>
         </div>
 
         <div className="relative w-full sm:w-72">

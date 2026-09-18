@@ -114,24 +114,19 @@ export default function MyVehiclesTab({ vehicles, currentUser, onVehicleAdded, o
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-lg">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              <Icon name="directions_car" size={22} />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">My Vehicles</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <Icon name="directions_car" size={22} />
           </div>
-          <p className="text-xs text-zinc-400">
-            Register and manage your cars and bikes for service bookings and digital maintenance records.
-          </p>
+          <h2 className="text-lg font-bold text-white tracking-tight">Registered Vehicles</h2>
         </div>
 
         <Button
           onClick={handleOpenAdd}
           className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs h-10 px-5 shadow-md shadow-blue-900/20 rounded-xl"
         >
-          <Icon name="add" size={16} /> Add New Vehicle
+          <Icon name="add" size={16} /> Add Vehicle
         </Button>
       </div>
 

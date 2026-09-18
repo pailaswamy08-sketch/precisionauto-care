@@ -95,17 +95,14 @@ export default function ArchitectureTab() {
     <div className="space-y-8">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-zinc-800">
         <div>
-          <div className="text-xs text-zinc-400 font-mono mb-1">
-            24SDCS03R &bull; Team PS24-S54-15
+          <div className="text-xs text-blue-400 font-mono mb-1 uppercase tracking-wider font-semibold">
+            PS024 &bull; Service-Oriented Architecture
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Microservices Architecture &amp; System Topology
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            System Architecture &amp; Service Topology
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Spring Boot 3, Spring Cloud Gateway, Eureka Server, and OpenFeign inter-service pipeline.
-          </p>
         </div>
 
         <div className="flex items-center gap-2">

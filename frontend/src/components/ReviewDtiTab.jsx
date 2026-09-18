@@ -101,11 +101,8 @@ PrecisionAuto Care (PS024) is a digital platform built on Spring Boot 3, Spring 
             Course 24SDCS03R &bull; Team PS24-S54-15
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            Review 1 Continuous Evaluation &amp; DTI Dossier
+            Review Continuous Evaluation &amp; DTI Dossier
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Rubrics evaluation (50/50), Database Justification Matrix, and Design Thinking Framework.
-          </p>
         </div>
 
         <Button

@@ -226,17 +226,14 @@ export default function UserBookServiceTab({
       
       {/* Interactive 3-Step Wizard Navigation Header */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800">
-          <div>
-            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-              <span className="p-1.5 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
-                <Icon name="calendar_month" size={20} />
-              </span>
-              <span>Book a Service Appointment</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-zinc-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+              <Icon name="calendar_month" size={20} />
+            </div>
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              Service Appointment Booking
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Automated service bay allocation &bull; Real-time collision-free slot reservation
-            </p>
           </div>
 
           {/* Current Step Badge */}
@@ -362,17 +359,14 @@ export default function UserBookServiceTab({
           {/* Step 1 Date Selector & Fast Pills */}
           <Card className="p-6 bg-zinc-900 border-zinc-800 rounded-3xl shadow-xl space-y-5">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <span className="text-xs font-bold text-blue-400 uppercase font-mono tracking-wider">
                   Step 1 &bull; Appointment Schedule
                 </span>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <Icon name="event_available" size={20} className="text-emerald-400" />
-                  Select Date &amp; Explore Bay Matrix
+                  Select Date &amp; Service Bay Slot
                 </h3>
-                <p className="text-xs text-zinc-400">
-                  Select your date below to inspect real-time bay occupancy and select an open slot.
-                </p>
               </div>
 
               {/* Date Selector Trigger & Quick Pills */}
@@ -548,15 +542,12 @@ export default function UserBookServiceTab({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-800">
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-blue-400 uppercase font-mono tracking-wider">
-                  Step 2 &bull; Vehicle Details
+                  Step 2 &bull; Vehicle Selection
                 </span>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <Icon name="directions_car" size={20} className="text-blue-400" />
-                  Select Your Vehicle for Service
+                  Choose Registered Vehicle
                 </h3>
-                <p className="text-xs text-zinc-400">
-                  Pick the vehicle from your garage fleet or search by type/model.
-                </p>
               </div>
 
               <button
@@ -813,15 +804,12 @@ export default function UserBookServiceTab({
           <Card className="p-6 bg-zinc-900 border-zinc-800 rounded-3xl shadow-xl space-y-6">
             <div className="space-y-0.5 pb-4 border-b border-zinc-800">
               <span className="text-xs font-bold text-blue-400 uppercase font-mono tracking-wider">
-                Step 3 &bull; Service Package &amp; Confirmation
+                Step 3 &bull; Confirmation
               </span>
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <Icon name="build" size={20} className="text-amber-400" />
-                Select Service Package &amp; Finalize
+                Select Service Package &amp; Confirm
               </h3>
-              <p className="text-xs text-zinc-400">
-                Choose the maintenance or repair package for your vehicle.
-              </p>
             </div>
 
             {/* Service Packages Grid */}

@@ -55,9 +55,6 @@ export default function BillingTab({ invoices, onInvoicePaid }) {
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Dynamic Billing &amp; Invoices
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Dynamic labor, itemized parts calculation, and 18% GST invoice generation in Indian Rupee (₹).
-          </p>
         </div>
 
         {/* Search Bar */}

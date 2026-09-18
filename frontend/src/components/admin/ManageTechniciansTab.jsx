@@ -86,17 +86,12 @@ export default function ManageTechniciansTab({ technicians = [], records = [], o
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-lg">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-              <Icon name="engineering" size={22} />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Manage Technicians</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <Icon name="engineering" size={22} />
           </div>
-          <p className="text-xs text-zinc-400">
-            Roster management, technical specializations, job dispatching, and workshop productivity tracking.
-          </p>
+          <h2 className="text-lg font-bold text-white tracking-tight">Technician Roster</h2>
         </div>
 
         <Button

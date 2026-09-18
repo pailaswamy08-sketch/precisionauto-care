@@ -187,13 +187,8 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
             <Icon name="precision_manufacturing" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            {isRegister ? 'Create Account' : 'Welcome Back'}
+            {isRegister ? 'Create Customer Account' : 'Customer & Staff Portal Login'}
           </h1>
-          <p className="text-xs text-zinc-400 max-w-xs mx-auto">
-            {isRegister
-              ? 'Sign up in seconds to book service bays, track vehicle history, and view invoices.'
-              : 'Sign in to access your PrecisionAuto customer portal.'}
-          </p>
         </div>
 
         {/* Tab Selector: Sign In vs Sign Up */}

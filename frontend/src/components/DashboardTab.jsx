@@ -18,9 +18,6 @@ export default function DashboardTab({ stats, bays, bookings, records, invoices,
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Garage Operations &amp; Fleet Overview
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            PrecisionAuto Care digital platform &bull; Bay scheduling, vehicle diagnostics, and dynamic billing.
-          </p>
         </div>
         
         <div className="flex items-center gap-3">

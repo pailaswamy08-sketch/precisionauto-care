@@ -37,11 +37,11 @@ export default function UserPortal({
 
   const userNavItems = [
     { id: 'vehicles', label: 'My Vehicles', icon: 'directions_car', count: vehicles.length },
-    { id: 'book', label: 'Book Service ⭐', icon: 'calendar_month' },
-    { id: 'bookings', label: 'My Bookings', icon: 'event_note', count: bookings.length },
-    { id: 'history', label: 'Service History ⭐', icon: 'history', count: records.filter(r => r.serviceStatus === 'COMPLETED').length },
-    { id: 'invoices', label: 'My Invoices ⭐', icon: 'receipt_long', count: invoices.length },
-    { id: 'profile', label: 'My Profile', icon: 'person' },
+    { id: 'book', label: 'Book Service', icon: 'calendar_month' },
+    { id: 'bookings', label: 'Appointments', icon: 'event_note', count: bookings.length },
+    { id: 'history', label: 'Service History', icon: 'history', count: records.filter(r => r.serviceStatus === 'COMPLETED').length },
+    { id: 'invoices', label: 'Invoices & Billing', icon: 'receipt_long', count: invoices.length },
+    { id: 'profile', label: 'Account Profile', icon: 'person' },
   ];
 
   return (

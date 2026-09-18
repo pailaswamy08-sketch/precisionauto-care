@@ -99,21 +99,16 @@ export default function TechnicianTab({ records = [], technicians = [], currentU
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-amber-950/30 to-zinc-950 border border-zinc-800 shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-              <Icon name="engineering" size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Technician Workbench ⭐</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <Icon name="engineering" size={24} />
           </div>
-          <p className="text-xs text-zinc-400">
-            Assigned service queue &bull; Stage progression, vehicle diagnostics, parts logging, and automatic invoice emission.
-          </p>
+          <h2 className="text-lg font-bold text-white tracking-tight">Technician Workbench</h2>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono bg-zinc-950 px-3.5 py-2 rounded-xl border border-zinc-800">
-          <span className="text-zinc-400">Technician:</span>
+          <span className="text-zinc-400">Assigned Tech:</span>
           <span className="text-amber-400 font-bold">{currentUser?.fullName || 'Ravi Kumar'}</span>
         </div>
       </div>

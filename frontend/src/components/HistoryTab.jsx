@@ -34,11 +34,8 @@ export default function HistoryTab({ records, onSelectInvoice }) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            Vehicle Fleet History &amp; Diagnostic Logs
+            Vehicle Fleet History &amp; Diagnostics
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Complete maintenance history indexed by VIN and License Plate.
-          </p>
         </div>
 
         {/* Search Bar */}

@@ -36,16 +36,16 @@ export default function AdminPortal({
   const [activeAdminTab, setActiveAdminTab] = useState('dashboard');
 
   const adminNavItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+    { id: 'dashboard', label: 'Overview', icon: 'dashboard' },
     { id: 'customers', label: 'Customers', icon: 'people', count: customers.length },
     { id: 'technicians', label: 'Technicians', icon: 'engineering', count: technicians.length },
     { id: 'vehicles', label: 'Vehicles', icon: 'directions_car', count: vehicles.length },
     { id: 'services', label: 'Services Catalog', icon: 'build', count: services.length },
-    { id: 'bays', label: 'Service Bays ⭐', icon: 'garage', count: bays.length },
-    { id: 'bookings', label: 'Bookings ⭐', icon: 'event_available', count: bookings.length },
+    { id: 'bays', label: 'Service Bays', icon: 'garage', count: bays.length },
+    { id: 'bookings', label: 'Bookings', icon: 'event_available', count: bookings.length },
     { id: 'records', label: 'Service Records', icon: 'history_edu', count: records.length },
     { id: 'invoices', label: 'Invoices', icon: 'receipt_long', count: invoices.length },
-    { id: 'reports', label: 'Reports', icon: 'analytics' },
+    { id: 'reports', label: 'Analytics & Reports', icon: 'analytics' },
   ];
 
   return (

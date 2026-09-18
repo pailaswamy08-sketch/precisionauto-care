@@ -142,9 +142,6 @@ export default function BookingTab({ bays, bookings, currentUser, onBookingCreat
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Service Bay Reservation &amp; Schedule
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Real-time slot availability with atomic collision prevention.
-          </p>
         </div>
 
         {/* Date Selector */}

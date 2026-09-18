@@ -30,16 +30,11 @@ export default function AdminReportsTab({ analytics, technicians = [] }) {
     <div className="space-y-6">
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-lg">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Icon name="analytics" size={22} />
-            </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Executive Reports &amp; Analytics</h2>
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <Icon name="analytics" size={22} />
           </div>
-          <p className="text-xs text-zinc-400">
-            Automobile workshop performance metrics &bull; Revenue trends, technician workload, and service popularity.
-          </p>
+          <h2 className="text-xl font-bold text-white tracking-tight">Workshop Performance Analytics</h2>
         </div>
 
         {/* Period Selector */}

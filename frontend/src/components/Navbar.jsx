@@ -23,11 +23,24 @@ export default function Navbar({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const rolePills = [
-    { id: 'CLIENT', label: '👤 Customer Portal', icon: 'person' },
-    { id: 'ADMIN', label: '👨💼 Admin Portal', icon: 'admin_panel_settings' },
-    { id: 'TECHNICIAN', label: '🧑🔧 Technician Workbench', icon: 'engineering' },
+  // Only ADMINs can see Admin Portal and switch between all portals
+  // TECHNICIANs only see Technician Workbench
+  // CLIENTs/CUSTOMERS only see Customer Portal
+  const userRole = (currentUser?.role || activeRole || 'CLIENT').toUpperCase();
+  const isAdmin = userRole === 'ADMIN' || userRole === 'ROLE_ADMIN';
+  const isTechnician = userRole === 'TECHNICIAN' || userRole === 'ROLE_TECHNICIAN';
+
+  const allRolePills = [
+    { id: 'CLIENT', label: '👤 Customer Portal', icon: 'person', minRole: 'CLIENT' },
+    { id: 'TECHNICIAN', label: '🧑🔧 Technician Workbench', icon: 'engineering', minRole: 'TECHNICIAN' },
+    { id: 'ADMIN', label: '👑 Admin Portal', icon: 'admin_panel_settings', minRole: 'ADMIN' },
   ];
+
+  const visibleRolePills = allRolePills.filter((r) => {
+    if (isAdmin) return true; // Admin can view/switch to all portals
+    if (isTechnician) return r.id === 'TECHNICIAN'; // Technician only sees their workbench
+    return r.id === 'CLIENT'; // Regular user / client only sees Customer Portal
+  });
 
   return (
     <header className="sticky top-3 z-50 px-4 max-w-7xl mx-auto w-full mb-6">
@@ -54,9 +67,9 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Floating Active Role Selector Tabs */}
+        {/* Dynamic Role Navigation - Restricted by Role */}
         <div className="flex items-center space-x-1 bg-zinc-900/80 p-1 rounded-xl sm:rounded-full border border-zinc-800/80">
-          {rolePills.map((r) => {
+          {visibleRolePills.map((r) => {
             const isSelected = activeRole === r.id;
             return (
               <button

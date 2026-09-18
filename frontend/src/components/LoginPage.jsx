@@ -10,20 +10,18 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [organization, setOrganization] = useState('');
-  const [role, setRole] = useState('CLIENT');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  // CAPTCHA State & Canvas
+  // CAPTCHA State & Canvas Generation
   const [captchaCode, setCaptchaCode] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
   const canvasRef = useRef(null);
 
   const generateCaptcha = () => {
+    // Highly readable characters (avoid confusing 0/O, 1/I/L)
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     let code = '';
     for (let i = 0; i < 5; i++) {
@@ -41,37 +39,30 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Dark clean background
     ctx.fillStyle = '#18181b';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < 3; i++) {
-      ctx.strokeStyle = '#3f3f46';
-      ctx.lineWidth = 1;
+    // Subtle background lines
+    ctx.strokeStyle = '#27272a';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 2; i++) {
       ctx.beginPath();
       ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
       ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
       ctx.stroke();
     }
 
-    for (let i = 0; i < 25; i++) {
-      ctx.fillStyle = '#52525b';
-      ctx.beginPath();
-      ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.font = 'bold 20px "Courier New", monospace';
+    // High readability font
+    ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace';
     ctx.textBaseline = 'middle';
 
     for (let i = 0; i < code.length; i++) {
       ctx.save();
-      const x = 16 + i * 22;
+      const x = 16 + i * 24;
       const y = canvas.height / 2;
-      const angle = (Math.random() - 0.5) * 0.35;
-      ctx.translate(x, y);
-      ctx.rotate(angle);
-      ctx.fillStyle = '#fafafa';
-      ctx.fillText(code[i], -6, 2);
+      ctx.fillStyle = i % 2 === 0 ? '#38bdf8' : '#818cf8';
+      ctx.fillText(code[i], x - 5, y);
       ctx.restore();
     }
   };
@@ -80,7 +71,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
     const newCode = generateCaptcha();
     setTimeout(() => {
       drawCaptchaCanvas(newCode);
-    }, 50);
+    }, 60);
   }, [isRegister]);
 
   const handleRefreshCaptcha = () => {
@@ -90,11 +81,11 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
 
   const validateCaptcha = () => {
     if (!captchaInput.trim()) {
-      setError("Please complete the security CAPTCHA verification.");
+      setError("Please enter the security CAPTCHA code shown.");
       return false;
     }
     if (captchaInput.trim().toUpperCase() !== captchaCode.toUpperCase()) {
-      setError("Security check failed: Incorrect CAPTCHA code. Please enter the characters shown.");
+      setError("Incorrect CAPTCHA code. Please check the letters and try again.");
       handleRefreshCaptcha();
       return false;
     }
@@ -117,7 +108,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
         if (onLoginSuccess) onLoginSuccess(user);
       }, 400);
     } catch (err) {
-      setError(err.message || "Invalid credentials. Please verify your email and password.");
+      setError(err.message || "Invalid email or password. Please verify your credentials.");
       handleRefreshCaptcha();
     } finally {
       setLoading(false);
@@ -127,7 +118,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
   const executeRegister = async (e) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !password.trim()) {
-      setError("Please complete all required registration fields.");
+      setError("Please fill in your Name, Email, and Password.");
       return;
     }
 
@@ -139,15 +130,16 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
     setLoading(true);
 
     try {
+      // Clean sign up with just Name, Email, and Password (defaults role to CLIENT / Customer)
       const newUser = await api.register({
-        email,
+        email: email.trim(),
         password,
-        fullName,
-        phone,
-        role,
-        organization: organization || 'PrecisionAuto Customer'
+        fullName: fullName.trim(),
+        role: 'CLIENT',
+        organization: 'Individual Customer',
+        phone: '9876543210'
       });
-      setSuccessMsg(`Account created for ${newUser.fullName}! Authenticating...`);
+      setSuccessMsg(`Account created successfully for ${newUser.fullName}! Signing in...`);
       setTimeout(() => {
         if (onLoginSuccess) onLoginSuccess(newUser);
       }, 500);
@@ -161,6 +153,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
 
   // Quick 1-Click Demo Logins
   const handleQuickDemo = (demoRole) => {
+    setError(null);
     if (demoRole === 'USER') {
       setEmail('swamy@gmail.com');
       setPassword('Client@123');
@@ -175,8 +168,10 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[#09090b]">
-      <Card className="w-full max-w-md p-8 bg-zinc-900/95 border border-zinc-800 rounded-3xl shadow-2xl space-y-6 relative backdrop-blur-md">
+    <div className={`w-full flex items-center justify-center ${isModal ? '' : 'min-h-screen p-4 sm:p-6 bg-[#09090b]'}`}>
+      <Card className="w-full max-w-md p-6 sm:p-8 bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl space-y-6 relative backdrop-blur-md">
+        
+        {/* Close Button for Modal Mode */}
         {isModal && onClose && (
           <button
             onClick={onClose}
@@ -186,53 +181,23 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
           </button>
         )}
 
-        {/* Header Branding */}
-        <div className="space-y-1 text-center sm:text-left">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center mb-3 text-white shadow-lg shadow-blue-900/30">
-            <Icon name="precision_manufacturing" size={22} />
+        {/* Brand Header */}
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/40">
+            <Icon name="precision_manufacturing" size={24} />
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
-            {isRegister ? 'Create Customer Account' : 'Sign In to PrecisionAuto'}
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            {isRegister ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-zinc-400 max-w-xs mx-auto">
             {isRegister
-              ? 'Register as a customer to manage vehicles, book service bays, and track invoices.'
-              : 'Enter your credentials to access your garage management portal.'}
+              ? 'Sign up in seconds to book service bays, track vehicle history, and view invoices.'
+              : 'Sign in to access your PrecisionAuto customer portal.'}
           </p>
         </div>
 
-        {/* 1-Click Quick Demo Switchers */}
-        <div className="p-3.5 bg-zinc-950/80 rounded-2xl border border-zinc-800/80 space-y-2">
-          <span className="text-[10px] text-zinc-400 uppercase font-mono font-bold block text-center">
-            Quick 1-Click Demo Accounts
-          </span>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('USER')}
-              className="py-1.5 px-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/50 border border-blue-900/40 text-blue-300 text-[11px] font-bold text-center transition-colors"
-            >
-              👤 Swamy (User)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('TECH')}
-              className="py-1.5 px-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/50 border border-amber-900/40 text-amber-300 text-[11px] font-bold text-center transition-colors"
-            >
-              🧑🔧 Ravi (Tech)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickDemo('ADMIN')}
-              className="py-1.5 px-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/50 border border-purple-900/40 text-purple-300 text-[11px] font-bold text-center transition-colors"
-            >
-              👨💼 Admin Manager
-            </button>
-          </div>
-        </div>
-
-        {/* Auth Mode Toggle Tabs */}
-        <div className="grid grid-cols-2 p-1 bg-zinc-950 border border-zinc-800 rounded-xl">
+        {/* Tab Selector: Sign In vs Sign Up */}
+        <div className="grid grid-cols-2 p-1 bg-zinc-950 border border-zinc-800 rounded-2xl">
           <button
             type="button"
             onClick={() => {
@@ -240,7 +205,7 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
               setError(null);
               setSuccessMsg(null);
             }}
-            className={`py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+            className={`py-2 text-xs font-bold rounded-xl transition-all ${
               !isRegister
                 ? 'bg-zinc-800 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
@@ -255,88 +220,77 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
               setError(null);
               setSuccessMsg(null);
             }}
-            className={`py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+            className={`py-2 text-xs font-bold rounded-xl transition-all ${
               isRegister
                 ? 'bg-zinc-800 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            Register
+            Create Account
           </button>
         </div>
 
-        {/* Status Messages */}
+        {/* Status Alerts */}
         {error && (
-          <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-800/60 text-red-200 text-xs flex items-start gap-2.5">
-            <Icon name="error" size={16} />
-            <span className="leading-tight">{error}</span>
+          <div className="p-3.5 rounded-2xl bg-red-950/70 border border-red-800/80 text-red-200 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <Icon name="error" size={16} className="text-red-400 shrink-0 mt-0.5" />
+            <span className="leading-relaxed font-medium">{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-200 text-xs flex items-start gap-2.5">
-            <Icon name="check_circle" size={16} />
-            <span className="leading-tight">{successMsg}</span>
+          <div className="p-3.5 rounded-2xl bg-emerald-950/70 border border-emerald-800/80 text-emerald-200 text-xs flex items-start gap-2.5 animate-fadeIn">
+            <Icon name="check_circle" size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+            <span className="leading-relaxed font-medium">{successMsg}</span>
           </div>
         )}
 
-        {/* Form */}
+        {/* Clean, Simple Form */}
         <form onSubmit={isRegister ? executeRegister : executeLogin} className="space-y-4">
+          
+          {/* Full Name (Sign Up Only) */}
           {isRegister && (
-            <>
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-300">Full Name *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-300 block">
+                Full Name <span className="text-red-400">*</span>
+              </label>
+              <div className="relative">
                 <Input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Swamy Paila"
-                  className="h-9"
+                  className="h-10 pl-9 rounded-xl bg-zinc-950 border-zinc-800 focus:border-blue-500 text-xs text-white"
                 />
+                <Icon name="person" size={16} className="absolute left-3 top-3 text-zinc-500" />
               </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-300">Phone Number *</label>
-                <Input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="9876543210"
-                  className="h-9 font-mono"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-zinc-300">Account Type</label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="flex h-9 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 focus:outline-none"
-                >
-                  <option value="CLIENT">👤 Customer / Vehicle Owner</option>
-                  <option value="TECHNICIAN">🧑🔧 Workshop Technician</option>
-                  <option value="ADMIN">👨💼 Garage Manager (Admin)</option>
-                </select>
-              </div>
-            </>
+            </div>
           )}
 
+          {/* Email / Gmail */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-zinc-300">Email Address *</label>
-            <Input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="swamy@gmail.com"
-              className="h-9"
-            />
+            <label className="text-xs font-semibold text-zinc-300 block">
+              Email / Gmail Address <span className="text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <Input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                className="h-10 pl-9 rounded-xl bg-zinc-950 border-zinc-800 focus:border-blue-500 text-xs text-white"
+              />
+              <Icon name="mail" size={16} className="absolute left-3 top-3 text-zinc-500" />
+            </div>
           </div>
 
+          {/* Password */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-zinc-300">Password *</label>
+            <label className="text-xs font-semibold text-zinc-300 block">
+              Password <span className="text-red-400">*</span>
+            </label>
             <div className="relative">
               <Input
                 type={showPassword ? 'text' : 'password'}
@@ -344,69 +298,121 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="pr-10 h-9"
+                className="h-10 pl-9 pr-10 rounded-xl bg-zinc-950 border-zinc-800 focus:border-blue-500 text-xs text-white"
               />
+              <Icon name="lock" size={16} className="absolute left-3 top-3 text-zinc-500" />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2 text-zinc-400 hover:text-white"
+                className="absolute right-3 top-2.5 text-zinc-400 hover:text-white transition-colors"
+                title={showPassword ? "Hide password" : "Show password"}
               >
                 <Icon name={showPassword ? "visibility_off" : "visibility"} size={16} />
               </button>
             </div>
           </div>
 
-          {/* CAPTCHA Security Verification */}
+          {/* Security CAPTCHA */}
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                <Icon name="verified_user" size={14} className="text-blue-400" /> Security Check (CAPTCHA)
+                <Icon name="verified_user" size={14} className="text-blue-400" />
+                <span>Security Check (CAPTCHA)</span>
               </label>
               <button
                 type="button"
                 onClick={handleRefreshCaptcha}
-                className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
+                className="text-[11px] text-zinc-400 hover:text-blue-400 flex items-center gap-1 transition-colors"
+                title="Generate new code"
               >
                 <Icon name="refresh" size={13} />
-                <span>Refresh</span>
+                <span>Refresh Code</span>
               </button>
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950 shrink-0 select-none">
+              {/* High-legibility Canvas Code */}
+              <div 
+                className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950 shrink-0 cursor-pointer shadow-inner"
+                onClick={handleRefreshCaptcha}
+                title="Click to refresh CAPTCHA"
+              >
                 <canvas
                   ref={canvasRef}
-                  width="130"
-                  height="36"
-                  className="block cursor-pointer"
-                  onClick={handleRefreshCaptcha}
-                  title="Click to refresh CAPTCHA code"
+                  width="140"
+                  height="40"
+                  className="block"
                 />
               </div>
 
+              {/* User Code Input */}
               <Input
                 type="text"
                 required
                 maxLength={5}
                 value={captchaInput}
                 onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
-                placeholder="Enter 5 chars"
-                className="font-mono text-center tracking-widest uppercase font-bold h-9 rounded-xl"
+                placeholder="Enter Code"
+                className="font-mono text-center tracking-widest uppercase font-bold h-10 rounded-xl bg-zinc-950 border-zinc-800 focus:border-blue-500 text-sm text-white"
               />
             </div>
           </div>
 
+          {/* Submit Button */}
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-10 mt-3 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/30"
+            className="w-full h-11 mt-2 text-xs font-bold rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-900/40 transition-all cursor-pointer"
           >
-            {loading ? 'Authenticating...' : isRegister ? 'Create Account' : 'Sign In to Portal'}
+            {loading ? (
+              <span className="flex items-center gap-2 justify-center">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Processing...</span>
+              </span>
+            ) : isRegister ? (
+              'Create Customer Account'
+            ) : (
+              'Sign In to Customer Portal'
+            )}
           </Button>
         </form>
 
-        <div className="pt-3 border-t border-zinc-800/80 text-center text-xs text-zinc-500">
-          PrecisionAuto Care &bull; Multi-Role Garage Platform
+        {/* 1-Click Demo Accounts (Organized for Quick Testing) */}
+        <div className="pt-2">
+          <div className="p-3 bg-zinc-950 rounded-2xl border border-zinc-800/80 space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+              <span className="font-semibold text-zinc-300">Quick Test Logins:</span>
+              <span className="text-[10px] text-zinc-500">Auto-fills credentials</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleQuickDemo('USER')}
+                className="py-1.5 px-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-800/40 text-blue-300 text-[10px] font-bold text-center transition-colors truncate"
+              >
+                👤 Swamy (Client)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDemo('TECH')}
+                className="py-1.5 px-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/40 text-amber-300 text-[10px] font-bold text-center transition-colors truncate"
+              >
+                🧑🔧 Ravi (Tech)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDemo('ADMIN')}
+                className="py-1.5 px-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 text-purple-300 text-[10px] font-bold text-center transition-colors truncate"
+              >
+                👑 Garage Admin
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="text-center text-[11px] text-zinc-500 font-mono">
+          PrecisionAuto Care &bull; Fleet Maintenance Platform
         </div>
       </Card>
     </div>

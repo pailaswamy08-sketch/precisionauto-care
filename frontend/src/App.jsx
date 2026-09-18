@@ -94,46 +94,21 @@ export default function App() {
     loadAllData();
   }, []);
 
-  // Quick Role Switcher Handler (e.g. Swamy Customer, Ravi Tech, Garage Admin)
+  // Synchronize activeRole with currentUser role permissions
+  useEffect(() => {
+    if (currentUser?.role && currentUser.role !== 'ADMIN') {
+      setActiveRole(currentUser.role === 'TECHNICIAN' ? 'TECHNICIAN' : 'CLIENT');
+    }
+  }, [currentUser]);
+
+  // Role Switcher Handler (Only accessible if Admin or explicitly allowed)
   const handleSwitchRole = (role) => {
+    const userRole = (currentUser?.role || 'CLIENT').toUpperCase();
+    if (userRole !== 'ADMIN' && role !== userRole) {
+      return; // Non-admin cannot access or switch to unauthorized portals
+    }
     setActiveRole(role);
     setActiveTab('portal');
-
-    if (role === 'CLIENT') {
-      const user = {
-        userId: 1,
-        email: 'swamy@gmail.com',
-        fullName: 'Swamy Paila',
-        role: 'CLIENT',
-        organization: 'Individual Customer',
-        phone: '9876543210'
-      };
-      setCurrentUser(user);
-      localStorage.setItem('precision_user', JSON.stringify(user));
-    } else if (role === 'ADMIN') {
-      const admin = {
-        userId: 99,
-        email: 'admin@precisionauto.com',
-        fullName: 'Garage Manager (Admin)',
-        role: 'ADMIN',
-        organization: 'PrecisionAuto Headquarters',
-        phone: '9123456780'
-      };
-      setCurrentUser(admin);
-      localStorage.setItem('precision_user', JSON.stringify(admin));
-    } else if (role === 'TECHNICIAN') {
-      const tech = {
-        userId: 2,
-        email: 'ravi@precisionauto.com',
-        fullName: 'Ravi Kumar',
-        role: 'TECHNICIAN',
-        organization: 'Master Diagnostics Crew',
-        phone: '9876500001',
-        specialization: 'Engine & Electrical Service'
-      };
-      setCurrentUser(tech);
-      localStorage.setItem('precision_user', JSON.stringify(tech));
-    }
   };
 
   // User Vehicle Handlers

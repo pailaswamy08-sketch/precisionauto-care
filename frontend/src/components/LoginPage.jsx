@@ -388,23 +388,23 @@ export default function LoginPage({ onLoginSuccess, onClose, isModal = false }) 
               <button
                 type="button"
                 onClick={() => handleQuickDemo('USER')}
-                className="py-1.5 px-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-800/40 text-blue-300 text-[10px] font-bold text-center transition-colors truncate"
+                className="py-1.5 px-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-800/40 text-blue-300 text-xs font-bold text-center transition-colors truncate"
               >
-                👤 Swamy (Client)
+                👤 User
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickDemo('TECH')}
-                className="py-1.5 px-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/40 text-amber-300 text-[10px] font-bold text-center transition-colors truncate"
+                className="py-1.5 px-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/40 text-amber-300 text-xs font-bold text-center transition-colors truncate"
               >
-                🧑🔧 Ravi (Tech)
+                🧑🔧 Technician
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickDemo('ADMIN')}
-                className="py-1.5 px-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 text-purple-300 text-[10px] font-bold text-center transition-colors truncate"
+                className="py-1.5 px-2 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/40 text-purple-300 text-xs font-bold text-center transition-colors truncate"
               >
-                👑 Garage Admin
+                👑 Admin
               </button>
             </div>
           </div>
